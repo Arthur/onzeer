@@ -26,13 +26,13 @@ class ApplicationController < ActionController::Base
   end
 
   def ensure_activated
-    unless current_user.activated
+    if current_user && !current_user.activated
       redirect_to root_path
     end
   end
 
   def ensure_nickname
-    if current_user.nickname.blank?
+    if current_user && current_user.nickname.blank?
       respond_to do |f|
         f.html { redirect_to edit_user_path(current_user)}
       end
