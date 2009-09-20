@@ -1,0 +1,9 @@
+.album
+  %span.artist
+    =h @album.artist
+  %span.name
+    =h @album.name
+
+  - form_for(@comment, :url => album_comment_path(@album, @comment), :html => {:method => :put}) do |f|
+    = f.text_field :body
+    = f.submit "Send"

@@ -1,0 +1,9 @@
+%ul.albums
+  - @albums.each do |album|
+    %li
+      %span.artist
+        =h album.artist
+      %span.name
+        =h album.name
+      %ul.tracks
+        = render :partial => "tracks/track", :collection => album.tracks

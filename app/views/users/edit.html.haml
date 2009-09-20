@@ -1,0 +1,19 @@
+= error_messages_for(:user)
+%p.email
+  Email:
+  =h @user.email
+
+- form_for(@user) do |f|
+  %p.nickname
+    = f.label :nickname
+    = f.text_field :nickname
+  - if current_user.admin?
+    %p.activated
+      = f.label :activated
+      = f.check_box :activated
+    %p.roles
+      = f.label :roles
+      = f.text_field :roles_str
+    
+  = f.submit "Ok"
+

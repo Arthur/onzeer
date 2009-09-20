@@ -1,0 +1,7 @@
+= error_messages_for(:track)
+- form_for(@track) do |f|
+  -  [:artist, :album_name, :title, :nb, :published].each do |attr|
+    %p{:class => attr}
+      = f.label attr
+      = f.text_field attr
+  = f.submit "Save"

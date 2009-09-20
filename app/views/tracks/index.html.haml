@@ -1,0 +1,9 @@
+- if @tracks.total_pages > 1
+  %p.pagination
+    = link_to "<", tracks_path(:page => @tracks.previous_page) if @tracks.previous_page
+    = content_tag :span, @tracks.current_page
+    = link_to ">", tracks_path(:page => @tracks.next_page) if @tracks.next_page
+
+%ul.tracks
+  = render :partial => "track", :collection => @tracks
+

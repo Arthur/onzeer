@@ -1,0 +1,17 @@
+!!!
+
+%html
+  %head
+    %title
+      Hello
+
+  %body
+    .header
+      - if current_user
+        .nickname
+          = h(current_user.nickname)
+        .logout
+          - form_for(:session, :url => session_path, :html => {:method => :delete}) do |f|
+            = f.submit 'logout'
+
+    = yield

@@ -1,0 +1,11 @@
+%li
+  %span.artist
+    =h track.artist
+  %span.album_name
+    =link_to h(track.album_name), album_path(track.album)
+  - [:nb, :title].each do |attr|
+    %span{:class => attr}
+      =h track.send(attr)
+  - if current_user.admin?
+    %span.edit
+      = link_to :edit, edit_track_path(track)

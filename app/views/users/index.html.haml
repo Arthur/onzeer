@@ -1,0 +1,13 @@
+%ul.users
+- @users.each do |user|
+  %li
+    %span.nickname
+      =h user.nickname
+    %span.email
+      =h user.email
+    %span.roles
+      =h user.roles_str
+    %span.edit
+      = link_to :edit, edit_user_path(user)
+
+  
