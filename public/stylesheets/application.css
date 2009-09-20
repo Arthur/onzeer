@@ -1,0 +1,108 @@
+#player {
+  height: 80px;
+  margin: 1%;
+  position: relative;
+}
+
+#player > div {
+  position: absolute;
+  height: 80px;
+}
+
+#player .control {
+  height: 40px;
+  width: 40px;
+  top: 20px;
+  left: 20px;
+  display:block;
+}
+
+#player .search {
+  top: 1em;
+  right: 2em;
+  width: 10em;
+}
+#player .img {
+  left: 80px;
+}
+#player .img img { height: 75px; float: left;}
+
+#player .info,
+#player .duration {
+  left: 200px;
+}
+#player .info { top: 15px; }
+#player .duration { top: 40px; }
+
+#player #time_bar {
+  width: 350px;
+  height: 6px;
+  border: 1px solid #999;
+}
+#player #time_bar div{
+  height: 100%;
+  background-color: #888;
+}
+
+#browser {
+  width: 80%;
+  margin: 1% 10%;
+  position: relative;
+}
+
+#browser > ul { 
+  position: absolute;
+  margin: 0; padding: 0; 
+  overflow-y: auto;
+  border: 2px solid #999;
+}
+
+#browser ul,
+#browser li,
+#browser p {
+  margin: 0;
+  padding: 0;
+}
+#browser li { list-style-type: none; }
+
+#browser li.selected,
+#browser li.playing {
+  background-color: #DDD;
+}
+
+#browser .artists, #browser .albums {
+  top : 0;
+  height: 200px;
+  width: 49%;
+}
+#browser .artists { left: 0; }
+#browser .albums { left: 51%; }
+
+#browser .tracks { left:0; top :210px; width: 100%;}
+
+#browser .tracks > li { position: relative;}
+#browser .tracks .album_info {
+  width: 100%;
+  height: 5em;
+  background-color: #abc;
+  border-top: 2px solid #999;
+}
+
+
+#browser .tracks .album_info > p { position: absolute; }
+#browser .tracks .album_info .img { position: absolute; top: 0.5em; left: 1em; }
+#browser .tracks .album_info .img img { height: 4em;}
+#browser .tracks .album_info .artist,
+#browser .tracks .album_info .album { left: 6em;}
+#browser .tracks .album_info .artist { top: 1em;}
+#browser .tracks .album_info .album { top: 2.2em;}
+
+#browser .tracks ul { width: 100%;}
+#browser .tracks ul li { height: 1.2em; width: 100%; border-top: 1px solid #999;}
+#browser .tracks ul li > p { position: absolute;}
+
+#browser .tracks ul li .artist,
+#browser .tracks ul li .album { display:none; }
+#browser .tracks ul li .track_nb { left: 1em; }
+#browser .tracks ul li .name { left: 3em;  }
+#browser .tracks ul li .duration { right: 1em; }

@@ -1,7 +1,12 @@
 class TracksController < ApplicationController
 
   def index
-    @tracks = Track.paginate(params.merge(:order => 'artist, album_name, nb', :per_page => 25))
+    respond_to do |format|
+      format.html { 
+        @tracks = Track.paginate(params.merge(:order => 'artist, album_name, nb', :per_page => 25))
+      }
+      format.json { render :json => {:tracks => Track.all_since(params[:since]), :date => Time.now.utc} }
+    end
   end
 
   def show

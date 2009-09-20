@@ -61,4 +61,13 @@ class Track
     track
   end
 
+  def self.all_since(since)
+    if since.blank?
+      Track.all
+    else
+      since = DateTime.parse(since)
+      Track.all.select{|t| t.updated_at > since}
+    end
+  end
+
 end
