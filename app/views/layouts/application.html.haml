@@ -19,4 +19,7 @@
             = f.submit 'logout'
 
     #content
+      - if controller_name != "home"
+        %p
+          = link_to "player", root_path
       = yield
