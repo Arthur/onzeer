@@ -75,6 +75,10 @@
   height: 200px;
   width: 49%;
 }
+#browser .artists > li ,
+#browser .albums > li,
+#browser .tracks_in_albums > li { cursor: pointer; }
+
 #browser .artists { left: 0; }
 #browser .albums { left: 51%; }
 
