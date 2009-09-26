@@ -1,7 +1,7 @@
 class AlbumsController < ApplicationController
 
   def index
-    @albums = Album.all
+    @albums = Album.paginate(params.merge(:order => 'artist, name', :per_page => 10))
   end
 
   def show

@@ -1,3 +1,9 @@
+- if @albums.total_pages > 1
+  %p.pagination
+    = link_to "<", albums_path(:page => @albums.previous_page) if @albums.previous_page
+    = content_tag :span, @albums.current_page
+    = link_to ">", albums_path(:page => @albums.next_page) if @albums.next_page
+
 %ul.albums
   - @albums.each do |album|
     %li
