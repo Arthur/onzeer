@@ -50,8 +50,25 @@ class Track
     @album = album
   end
 
+  def track_info
+    @track_info ||= TrackInfo.new(file)
+  end
+
+  def save_cover
+    if cover = track_info[:cover]
+      md5 = Digest::MD5.hexdigest(track_info[:cover])
+      cover_file = Rails.root.join('public', 'cover_files', md5[0..1], md5[2..3], md5[4..-1]+'.png')
+      self.cover = md5
+      unless File.exist?(cover_file)
+        FileUtils.mkdir_p(File.dirname(cover_file))
+        File.open(cover_file,'w') { |file| file.write(cover) }
+      end
+    end
+  end
+
   def self.from_file(file)
-    info = TrackInfo.new(file)
+    track = Track.new(:file => file)
+    info = track.info
     return nil unless info[:artist] && info[:album] && info[:title]
     track = new(
       :artist => info[:artist],
@@ -62,9 +79,9 @@ class Track
       :bitrate => info[:bitrate],
       :seconds => info[:seconds],
       :format => info[:extension],
-      :cover => info[:cover] && Digest::MD5.hexdigest(info[:cover]),
       :file => file
     )
+    track.save_cover
     track.save
     track
   end
