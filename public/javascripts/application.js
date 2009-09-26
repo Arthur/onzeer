@@ -1,3 +1,4 @@
+var covers_path = "cover_files";
 var tracks_path = "audio_files";
 var database = null;
 var r = null;
@@ -249,7 +250,6 @@ function showInListAfterSearchChange() {
 function showInListAfterLiClick(li) {
   var album_ids = null;
   var match_class = ($('#player input').get(0).value) ? '.match' : '';
-  console.log(["match_class", li.get(0), match_class])
 
   if (li.parent().hasClass('artists')) {
     $('ul.artists li').removeClass('selected');
@@ -312,11 +312,11 @@ function showCurrentTime() {
 
 //html builders :
 function track_img(track) {
-  if (track.cover) {
-    var img_src = prefix + '/' + tracks_path + '/' + track.cover.substring(0,2) + '/' + track.cover.substring(2,4) + '/' + track.cover.substring(4)  + '.png';
+  if (track.cover != "undefined") {
+    var img_src = prefix + covers_path + '/' + track.cover.substring(0,2) + '/' + track.cover.substring(2,4) + '/' + track.cover.substring(4)  + '.png';
     return '<img src="' + img_src + '" />';
   } else {
-    return '<img src="images/unknow_cover.png" alt="?">';
+    return '<img src="'+ prefix + 'images/unknow_cover.png" alt="?" />';
   };
   return undefined;
 }
