@@ -1,4 +1,4 @@
-var tracks_path = "/audio_files"
+var tracks_path = "audio_files"
 var database = null;
 var r = null;
 
@@ -30,10 +30,10 @@ function resetDatabase(){
 
 function insertTrack(track) {
   var sql = "UPDATE tracks SET artist = ?, album = ?, album_id = ?, title = ?, extension = ?, cover = ?, track_nb = ?, seconds = ? WHERE id = ?"
-  executeSql(sql, [track.artist, track.album_name, track.album_id, track.title, track.extension, track.cover, track.nb, track.seconds, track.id])
+  executeSql(sql, [track.artist, track.album_name, track.album_id, track.title, track.format, track.cover, track.nb, track.seconds, track.id])
   
   var sql = "INSERT INTO tracks (id, artist, album, album_id, title, extension, cover, track_nb, seconds) VALUES (?,?,?,?,?,?,?,?,?)";
-  executeSql(sql, [track.id, track.artist, track.album_name, track.album_id, track.title, track.extension, track.cover, track.nb, track.seconds])
+  executeSql(sql, [track.id, track.artist, track.album_name, track.album_id, track.title, track.format, track.cover, track.nb, track.seconds])
 }
 
 function checkForTracks() {
@@ -59,8 +59,10 @@ function checkForTracks() {
   
 }
 
-function playNow(id) {
+var will_play_id = null;
 
+function playNow(id) {
+  will_play_id = id;
   var player = $('#player');
   executeSql("SELECT * from tracks WHERE id = ?", [id], function(result) {
     if (result.rows.length == 1) {
@@ -82,15 +84,15 @@ function playNow(id) {
       $('audio').each(function(){this.pause()});
       $('audio').remove();
 
-      var audio_src = tracks_path + '/' + id.substring(0,2) + '/' + id.substring(2,4) + '/' + id.substring(4)  + '.' + track.extension;
+      var audio_src = prefix + tracks_path + '/' + id.substring(0,2) + '/' + id.substring(2,4) + '/' + id.substring(4)  + '.' + track.extension;
       var audio = $('<audio> <source src="'+ audio_src + '" /></audio>').appendTo(player);
       audio.get(0).play();
-
+      audio.get(0).volume = 0.1;
       audio.bind("ended", playNext);
 
       setTimeout(function(){$('#time_bar').trigger("showCurrentTime")}, 100);
 
-      window.location.hash = '#' + track.artist + '/' + track.album + '/' + track.title;
+      window.location.hash = '#' + track.id;
 
       info.html(track_info(track));
       img.html(track_img(track));
@@ -246,7 +248,7 @@ function showCurrentTime() {
 //html builders :
 function track_img(track) {
   if (track.cover) {
-    var img_src = tracks_path + '/' + track.cover.substring(0,2) + '/' + track.cover.substring(2,4) + '/' + track.cover.substring(4)  + '.png';
+    var img_src = prefix + '/' + tracks_path + '/' + track.cover.substring(0,2) + '/' + track.cover.substring(2,4) + '/' + track.cover.substring(4)  + '.png';
     return '<img src="' + img_src + '" />';
   } else {
     return '<img src="images/unknow_cover.png" alt="?">';
@@ -305,16 +307,15 @@ $(function() {
   };
 
   if (window.location.hash.length > 1) {
-    var parts = decodeURIComponent(window.location.hash.substring(1)).split('/');
-    if (parts.length == 3) {
-      executeSql("SELECT * from tracks WHERE artist = ? AND album = ? AND title = ?", parts, function(result){
-        if (result.rows.length == 1) {
-          playNow(result.rows.item(0).id)
-        }
-      })
-    }
+    var id = window.location.hash.substring(1);
+    playNow(id);
   }
-
+  setInterval(function() {
+    if (window.location.hash.length > 1 && (window.location.hash.substring(1) != will_play_id)) {
+      playNow( window.location.hash.substring(1) );
+    }
+  }, 100);
+  
   var time_bar = $('#time_bar');
   time_bar.bind("showCurrentTime",showCurrentTime);
   time_bar.click(function(event){
