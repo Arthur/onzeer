@@ -18,6 +18,7 @@ class Track
   key :file, String, :required => true
 
   after_save :set_album
+  after_create :set_public_symlink
 
   def set_album
     if album.nil? || album.artist != artist || album.name != album_name
@@ -31,6 +32,13 @@ class Track
       end
       self.save
     end
+  end
+
+  def set_public_symlink
+    dir = Rails.root.join('public', 'audio_files', id[0..1], id[2..3])
+    FileUtils.mkdir_p(dir)
+    symlink_path = File.join(dir, id[4..-1]+'.'+format)
+    FileUtils.ln_s file, symlink_path
   end
 
   def album
