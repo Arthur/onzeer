@@ -198,6 +198,7 @@ function buildArtistList() {
           $('<div class="album_info"/>').
             append('<p class="artist">' + track.artist + '</p>').
             append('<p class="album">' + track.album + '</p>').
+            append('<p class="action"><a href="'+prefix+'albums/'+track.album_id+'">more...</a></p>').
             append($('<div class="img"/>').append(track_img(track))).
             appendTo(li);
 
@@ -369,6 +370,41 @@ $(function() {
     var artists_ul = $("<ul class=\"artists\"></ul>").appendTo(browser);
     var albums_ul = $("<ul class=\"albums\"></ul>").appendTo(browser);
     var tracks_ul = $("<ul class=\"tracks\"></ul>").appendTo(browser);
+
+    var time_bar = $('#time_bar');
+    time_bar.bind("showCurrentTime",showCurrentTime);
+    time_bar.click(function(event){
+      var audio = $('audio').get(0);
+      audio.currentTime = audio.duration * (event.clientX - time_bar.offset().left) / time_bar.width();
+      showCurrentTime();
+    });
+
+    buildArtistList();
+
+    artists_ul.click(function(event){
+      var target = event.target;
+      if (target.tagName == "LI") {
+        target = $(target);
+        showInListAfterLiClick(target);
+      }
+    });
+
+    albums_ul.click(function(event){
+      var target = event.target;
+      if (target.tagName == "SPAN") {
+        target = $(target).parent('li');
+      }
+      target = $(target);
+      showInListAfterLiClick(target);
+    });
+
+    tracks_ul.dblclick(function(event) {
+      var target = $(event.target);
+      var id = target.attr('id');
+      if (!id) { id = target.parents('li').attr('id'); }
+      if (id) { playNow(id); };
+    });
+
   };
 
   if (window.location.hash.length > 1) {
@@ -381,39 +417,6 @@ $(function() {
     }
   }, 100);
   
-  var time_bar = $('#time_bar');
-  time_bar.bind("showCurrentTime",showCurrentTime);
-  time_bar.click(function(event){
-    var audio = $('audio').get(0);
-    audio.currentTime = audio.duration * (event.clientX - time_bar.offset().left) / time_bar.width();
-    showCurrentTime();
-  });
-
-  buildArtistList();
-
-  artists_ul.click(function(event){
-    var target = event.target;
-    if (target.tagName == "LI") {
-      target = $(target);
-      showInListAfterLiClick(target);
-    }
-  });
-
-  albums_ul.click(function(event){
-    var target = event.target;
-    if (target.tagName == "SPAN") {
-      target = $(target).parent('li');
-    }
-    target = $(target);
-    showInListAfterLiClick(target);
-  });
-
-  tracks_ul.dblclick(function(event) {
-    var target = $(event.target);
-    var id = target.attr('id');
-    if (!id) { id = target.parents('li').attr('id'); }
-    if (id) { playNow(id); };
-  });
 
   player.find('.prev').click(playPrev);
   player.find('.next').click(playNext);
