@@ -37,7 +37,7 @@ class Album
   def update_tracks
     return unless @need_tracks_update
     tracks.each do |track|
-      track.update_attributes(:artist => artist, :album_name => name)
+      track.update_attributes(:artist => artist, :album_name => name) unless track.album_name == name && track.artist == artist
     end
   end
   protected :update_tracks
