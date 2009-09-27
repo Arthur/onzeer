@@ -9,6 +9,12 @@ class User
   key :activated, Boolean
   key :roles, Array
 
+  before_save :open_bar
+
+  def open_bar
+    self.activated = true
+  end
+
   def roles_str
     roles.join(', ')
   end
