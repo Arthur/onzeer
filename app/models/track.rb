@@ -20,7 +20,6 @@ class Track
   key :user_id, String, :required => true
 
   after_save :set_album
-  after_create :set_public_symlink
   after_save :move_file
 
   attr_accessor :file_data, :content_type
@@ -42,6 +41,7 @@ class Track
       FileUtils.mv(file, path)
       self.file = path
       self.file_data = nil
+      set_public_symlink
       self.save
     end
   end
@@ -122,6 +122,7 @@ class Track
     )
     track.save_cover
     track.save
+    track.set_public_symlink
     track
   end
 
