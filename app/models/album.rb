@@ -15,13 +15,7 @@ class Album
 
   def tracks
     return @tracks if @tracks
-    if track_ids.empty?
-      @tracks = []
-    else
-      @tracks = Track.find(track_ids)
-      @tracks = [@tracks] if track_ids.length == 1
-    end
-    @tracks
+    @tracks = Track.find(:all, :conditions => {:_id => track_ids})
   end
 
   def artist=(value)
