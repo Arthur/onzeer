@@ -17,8 +17,34 @@ class Track
   key :cover, String
   key :file, String, :required => true
 
+  key :user_id, String, :required => true
+
   after_save :set_album
   after_create :set_public_symlink
+  after_save :move_file
+
+  attr_accessor :file_data, :content_type
+
+  def file_data=(data)
+    @file_data = data
+    return unless data && data.respond_to?(:path) && data.respond_to?(:content_type)
+    RAILS_DEFAULT_LOGGER.debug([data, data.path, data.content_type].inspect)
+    self.file = file_data.path
+    self.content_type = file_data.content_type
+    set_attributes_from_file
+  end
+
+  def move_file
+    RAILS_DEFAULT_LOGGER.debug(["save_file", file_data].inspect)
+    if file_data
+      path = Rails.root.join('storage', 'tracks', "user_#{user_id}", id[0..1], id[2..3], id[4..-1]+'.'+format)
+      FileUtils.mkdir_p(File.dirname(path))
+      FileUtils.mv(file, path)
+      self.file = path
+      self.file_data = nil
+      self.save
+    end
+  end
 
   def set_album
     if album.nil? || album.artist != artist || album.name != album_name
@@ -51,7 +77,7 @@ class Track
   end
 
   def track_info
-    @track_info ||= TrackInfo.new(file)
+    @track_info ||= TrackInfo.new(file, content_type)
   end
 
   def save_cover
@@ -64,6 +90,19 @@ class Track
         File.open(cover_file,'w') { |file| file.write(cover) }
       end
     end
+  end
+
+  def set_attributes_from_file
+    self.attributes = {
+      :artist => track_info[:artist],
+      :album_name => track_info[:album],
+      :title => track_info[:title],
+      :nb => track_info[:track_nb],
+      :year => track_info[:date],
+      :bitrate => track_info[:bitrate],
+      :seconds => track_info[:seconds],
+      :format => track_info[:extension],
+    }
   end
 
   def self.from_file(file)
