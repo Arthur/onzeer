@@ -80,11 +80,13 @@ function playNow(id) {
 
       play_pause.removeClass('stopped');
       play_pause.addClass('playing');
-      play_pause.text('pause');
+      play_pause.find('span').text('pause');
 
       // safari don't seem to like reusing and <audio> by changin it's source, so we built a new one.
       $('audio').each(function(){ this.pause(); });
       $('audio').remove();
+
+      $('#player .control').removeClass('disabled');
 
       var audio_src = prefix + tracks_path + '/' + id.substring(0,2) + '/' + id.substring(2,4) + '/' + id.substring(4)  + '.' + track.extension;
       var audio = $('<audio> <source src="'+ audio_src + '" /></audio>').appendTo(player);
@@ -94,7 +96,7 @@ function playNow(id) {
 
       setTimeout(function(){ $('#time_bar').trigger("showCurrentTime"); }, 100);
 
-      window.location.hash = '#' + track.id;
+      // window.location.hash = '#' + track.id; // => scroll to the track html id ;-()
 
       info.html(track_info(track));
       img.html(track_img(track));
@@ -115,7 +117,7 @@ function togglePlayPause() {
     $('audio').each(function(){ this.pause(); });
     play_pause.removeClass('playing');
     play_pause.addClass('stopped');
-    play_pause.text('play');
+    play_pause.find('span').text('play');
   } else {
     $('audio').each(function(){ this.pause(); });
     var audio = $('#player audio');
@@ -123,7 +125,7 @@ function togglePlayPause() {
       audio.get(0).play();
       play_pause.removeClass('stopped');
       play_pause.addClass('playing');
-      play_pause.text('pause');
+      play_pause.find('span').text('pause');
     }
   }
 }
@@ -330,6 +332,7 @@ function track_info(track) {
 
 function track_li(track) {
   return $( '<li id="'+track.id+'">' +
+    '<p class="control"/>' + 
     '<p class="artist">' + track.artist + '</p>' + 
     '<p class="album">' + track.album + '</p>' +
     '<p class="track_nb">'+ (track.track_nb > 9 ? '' : '0') + track.track_nb + '</p>' +
@@ -342,10 +345,10 @@ function player_div() {
   var player = $('#player');
   if (player.length == 0 ) { player = null; return; }
 
-  $('<div class="control"/>').
-    append('<div class="prev">prev</div>').
-    append('<div class="play_pause stopped">play</div>').
-    append('<div class="next">next</div>').
+  $('<div class="control disabled"/>').
+    append('<div class="prev"><span>prev</span></div>').
+    append('<div class="play_pause stopped"><span>play</span></div>').
+    append('<div class="next"><span>next</span></div>').
     appendTo(player);
   $('<div class="info" />').appendTo(player);
   $('<div class="img" />').appendTo(player);
@@ -398,11 +401,17 @@ $(function() {
       showInListAfterLiClick(target);
     });
 
-    tracks_ul.dblclick(function(event) {
+    tracks_ul.click(function(event) {
+      console.log(event)
       var target = $(event.target);
-      var id = target.attr('id');
-      if (!id) { id = target.parents('li').attr('id'); }
-      if (id) { playNow(id); };
+      if (target.hasClass("control")) {
+        var track_li = target.parents('li');
+        var id = track_li.attr('id');
+        if (track_li.hasClass("playing")) {
+          togglePlayPause();
+          track_li.removeClass("playing");
+        } else { playNow(id); };
+      }
     });
 
   };

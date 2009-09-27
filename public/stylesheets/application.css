@@ -6,16 +6,40 @@
 
 #player > div {
   position: absolute;
-  height: 80px;
+  height: 50px;
 }
 
 #player .control {
-  height: 40px;
-  width: 40px;
+  height: 50px;
+  width: 150px;
   top: 20px;
   left: 20px;
   display:block;
 }
+
+#player .control > div {
+  background-image: url('../images/music_player.png');
+  height: 50px;
+  width: 50px;
+  float: left;
+}
+#player .control span { display:none; }
+#player .control .prev {background-position: 200px 0px; }
+#player .control.disabled .prev {background-position: 200px 50px;}
+#player .control .prev:hover {background-position: 200px 100px;}
+
+#player .control .stopped {background-position: 150px 0px; }
+#player .control.disabled .stopped {background-position: 150px 50px;}
+#player .control .stopped:hover {background-position: 150px 100px;}
+
+#player .control .playing {background-position: 100px 0px; }
+#player .control.disabled .playing {background-position: 100px 50px; }
+#player .control .playing:hover {background-position: 100px 100px;}
+
+#player .control .next {background-position: 50px 0px; }
+#player .control.disabled .next {background-position: 50px 50px; }
+#player .control .next:hover {background-position: 50px 100px;}
+
 
 #player .search {
   top: 1em;
@@ -23,16 +47,16 @@
   width: 10em;
 }
 #player .img {
-  left: 80px;
+  left: 200px;
 }
 #player .img img { height: 75px; float: left;}
 
 #player .info,
 #player .duration {
-  left: 200px;
+  left: 300px;
 }
 #player .info { top: 15px; }
-#player .duration { top: 40px; }
+#player .duration { top: 40px; height: 10px;}
 
 #player #time_bar {
   width: 350px;
@@ -77,7 +101,7 @@
 }
 #browser .artists > li ,
 #browser .albums > li,
-#browser .tracks_in_albums > li { cursor: pointer; }
+#browser .tracks_in_album .control { cursor: pointer; }
 
 #browser .artists { left: 0; }
 #browser .albums { left: 51%; }
@@ -107,6 +131,15 @@
 
 #browser .tracks ul li .artist,
 #browser .tracks ul li .album { display:none; }
-#browser .tracks ul li .track_nb { left: 1em; }
-#browser .tracks ul li .name { left: 3em;  }
+#browser .tracks ul li .control {
+  left: 1em;
+  background-image: url('../images/silk/control_play.png');
+  width: 16px; height: 16px;
+}
+#browser .tracks ul li .control:hover{ background-image: url('../images/silk/control_play_blue.png'); }
+#browser .tracks ul li.playing .control{ background-image: url('../images/silk/control_pause.png'); }
+#browser .tracks ul li.playing .control:hover{ background-image: url('../images/silk/control_pause_blue.png'); }
+
+#browser .tracks ul li .track_nb { left: 2.5em; }
+#browser .tracks ul li .name { left: 5em;  }
 #browser .tracks ul li .duration { right: 1em; }
