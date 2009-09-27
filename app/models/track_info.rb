@@ -2,12 +2,18 @@ require 'mp4info'
 require 'mp3info'
 
 class TrackInfo
-  def initialize(filename)
+  def initialize(filename, content_type=nil)
     @filename = filename
+    @content_type = content_type
   end
   attr_accessor :filename
+  attr_accessor :content_type
 
   def format
+    if content_type
+      return :mp3 if content_type == "audio/mpeg"
+      return :aac if content_type == "audio/x-m4a"
+    end
     return :mp3 if filename =~ /\.mp3$/i
     return :aac if filename =~ /\.m4a$/i
   end
