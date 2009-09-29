@@ -1,19 +1,31 @@
+.header {position: absolute; top: 0; right: 0;}
+.header > div { float:left; margin: .5em; padding: 0;}
+
+#content { margin: 3em 0;}
+
+.tracks.playable,
+#player,
+#browser {
+  width: 80%;
+  margin: 1% 10%;
+  position: relative;
+}
+
 #player {
   height: 80px;
-  margin: 1%;
-  position: relative;
 }
 
 #player > div {
   position: absolute;
-  height: 50px;
+  top: 10px;
+  height: 85px;
 }
 
 #player .control {
   height: 50px;
   width: 150px;
-  top: 20px;
-  left: 20px;
+  top: 28px;
+  left: 25px;
   display:block;
 }
 
@@ -46,14 +58,22 @@
   right: 2em;
   width: 10em;
 }
+#player .info_box {
+  width: 500px; left: 200px;
+  background-color: #bbb;
+  border: 1px solid #fff;
+  -webkit-border-radius: 5px; 
+}
+#player .info_box > div { position: absolute; }
 #player .img {
-  left: 200px;
+  left: 10px;
+  top: 5px;
 }
 #player .img img { height: 75px; float: left;}
 
 #player .info,
 #player .duration {
-  left: 300px;
+  left: 100px;
 }
 #player .info { top: 15px; }
 #player .duration { top: 40px; height: 10px;}
@@ -68,11 +88,12 @@
   background-color: #888;
 }
 
-#browser {
-  width: 80%;
-  margin: 1% 10%;
-  position: relative;
-}
+
+.albums .tracks .artist,
+.albums .tracks .album_name,
+.album .tracks .artist,
+.album .tracks .album_name { display:none; }
+
 
 #browser > ul { 
   position: absolute;
@@ -89,8 +110,8 @@
 }
 #browser li { list-style-type: none; }
 
-#browser li.selected,
-#browser li.playing {
+li.selected,
+li.playing {
   background-color: #DDD;
 }
 
@@ -125,21 +146,49 @@
 #browser .tracks .album_info .artist { top: 1em;}
 #browser .tracks .album_info .album { top: 2.2em;}
 
-#browser .tracks ul { width: 100%;}
-#browser .tracks ul li { height: 1.2em; width: 100%; border-top: 1px solid #999;}
-#browser .tracks ul li > p { position: absolute;}
+.tracks ul { width: 100%;}
+.tracks ul li { height: 1.2em; width: 100%; border-top: 1px solid #999;}
+.tracks ul li > p { position: absolute;}
+.tracks ul li > span { position: absolute; display: block;}
 
-#browser .tracks ul li .artist,
-#browser .tracks ul li .album { display:none; }
-#browser .tracks ul li .control {
+.tracks ul li { list-style-type: none; }
+.tracks ul, .tracks ul li { margin: 0; padding: 0;}
+.tracks ul li .artist,
+.tracks ul li .album { display:none; }
+.tracks ul li .control {
   left: 1em;
   background-image: url('../images/silk/control_play.png');
   width: 16px; height: 16px;
 }
-#browser .tracks ul li .control:hover{ background-image: url('../images/silk/control_play_blue.png'); }
-#browser .tracks ul li.playing .control{ background-image: url('../images/silk/control_pause.png'); }
-#browser .tracks ul li.playing .control:hover{ background-image: url('../images/silk/control_pause_blue.png'); }
+.tracks ul li .control:hover{ background-image: url('../images/silk/control_play_blue.png'); }
+.tracks ul li.playing .control{ background-image: url('../images/silk/control_pause.png'); }
+.tracks ul li.playing .control:hover{ background-image: url('../images/silk/control_pause_blue.png'); }
 
-#browser .tracks ul li .track_nb { left: 2.5em; }
-#browser .tracks ul li .name { left: 5em;  }
-#browser .tracks ul li .duration { right: 1em; }
+.tracks ul li .track_nb { left: 2.5em; text-align: right;}
+.tracks ul li .title { left: 5em;  }
+.tracks ul li .duration { right: 1em; }
+.tracks ul li .edit { display:none;}
+.tracks ul li:hover .edit { display:block; right: 4em;}
+
+#player,
+.tracks.playable {
+  padding: 1em;
+  margin: 1em 3em 2em;
+  background-color: #E8E8E8;
+  -webkit-border-radius: 1em; 
+  -webkit-box-shadow: rgb(0, 0, 0) 0px 2px 5px;
+}
+
+#player { 
+  margin-bottom: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+}
+
+.tracks.playable { 
+  margin-top: 0;
+  -webkit-border-top-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+}
+
+

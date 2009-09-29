@@ -24,6 +24,11 @@ class Track
 
   attr_accessor :file_data, :content_type
 
+  def duration
+    min = seconds / 60
+    "%u:%02u" % [min, seconds - 60*min]
+  end
+
   def file_data=(data)
     @file_data = data
     return unless data && data.respond_to?(:path) && data.respond_to?(:content_type)

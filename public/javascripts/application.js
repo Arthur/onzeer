@@ -3,105 +3,48 @@ var tracks_path = "audio_files";
 var database = null;
 var r = null;
 
-function executeSql(sql, args, callback) {
-  if (!database) { return null; }
-  database.transaction(function(tx) {
-    tx.executeSql(sql, args, 
-      function(tx, result) {
-        r= result; 
-        if (callback) { callback(result); }
-      },
-      function(tx, error) { console.log(error);}
-    );
-  });
-  return undefined;
-}
-
-function initDatabase(){
-  database = openDatabase("Tracks", "1.0");
-  var sql = "CREATE TABLE IF NOT EXISTS tracks (id TEXT UNIQUE, artist TEXT, album TEXT, album_id TEXT, track_nb REAL, title TEXT, extension TEXT, cover TEXT, seconds REAL)";
-  executeSql(sql, []);
-  sql = "CREATE TABLE IF NOT EXISTS imports (id REAL UNIQUE, date TEXT)";
-  executeSql(sql, []);
-}
-
-function resetDatabase(){
-  executeSql("DROP TABLE tracks");
-  executeSql("DROP TABLE imports");
-}
-
-function insertTrack(track) {
-  var sql = "UPDATE tracks SET artist = ?, album = ?, album_id = ?, title = ?, extension = ?, cover = ?, track_nb = ?, seconds = ? WHERE id = ?";
-  executeSql(sql, [track.artist, track.album_name, track.album_id, track.title, track.format, track.cover, track.nb, track.seconds, track.id]);
-  
-  sql = "INSERT INTO tracks (id, artist, album, album_id, title, extension, cover, track_nb, seconds) VALUES (?,?,?,?,?,?,?,?,?)";
-  executeSql(sql, [track.id, track.artist, track.album_name, track.album_id, track.title, track.format, track.cover, track.nb, track.seconds]);
-}
-
-function checkForTracks() {
-  executeSql("SELECT * from imports ORDER BY id DESC LIMIT 1", [], function(result) {
-    
-    var url = prefix + "tracks.json";
-    var next = 1;
-    if (result.rows.length == 1) {
-      url += "?since="+ result.rows.item(0).date;
-    }
-
-    $.getJSON(url, null, function(json) {
-      executeSql("INSERT INTO imports (date) VALUES (?)", [json.date]);
-      $.each(json.tracks, function() {
-        insertTrack(this);
-      });
-      if (json.tracks.length > 0) {
-        buildArtistList();
-        checkForTracks();
-      }
-    });
-  });
-  
-}
-
 var will_play_id = null;
+var playing_track_id = null;
 
-function playNow(id) {
+function playNow(id, auto) {
+  if (auto === undefined) { auto = true; }
   will_play_id = id;
+  playing_track_id = id;
   var player = $('#player');
-  executeSql("SELECT * from tracks WHERE id = ?", [id], function(result) {
-    if (result.rows.length == 1) {
-      var track = result.rows.item(0);
+  var track_element = $('#'+id);
+  var track = $.data(track_element.get(0), 'track');
 
-      // set the class playing on the current track_li
-      $('.tracks li.playing').removeClass('playing');
-      $('#'+id).addClass('playing');
+  var info = player.find('.info');
+  var img = player.find('.img');
+  var play_pause = player.find('.play_pause');
 
-      var info = player.find('.info');
-      var img = player.find('.img');
-      var play_pause = player.find('.play_pause');
+  // safari don't seem to like reusing and <audio> by changin it's source, so we built a new one.
+  $('audio').each(function(){ this.pause(); });
+  $('audio').remove();
 
-      play_pause.removeClass('stopped');
-      play_pause.addClass('playing');
-      play_pause.find('span').text('pause');
+  $('#player .control').removeClass('disabled');
 
-      // safari don't seem to like reusing and <audio> by changin it's source, so we built a new one.
-      $('audio').each(function(){ this.pause(); });
-      $('audio').remove();
+  var audio_src = prefix + tracks_path + '/' + id.substring(0,2) + '/' + id.substring(2,4) + '/' + id.substring(4)  + '.' + track.format;
+  var audio = $('<audio> <source src="'+ audio_src + '" /></audio>').appendTo(player);
 
-      $('#player .control').removeClass('disabled');
+  $('.tracks li.playing').removeClass('playing');
+  if (auto) { 
+    audio.get(0).play();
+    play_pause.removeClass('stopped');
+    play_pause.addClass('playing');
+    play_pause.find('span').text('pause');
+    // set the class playing on the current track_li
+    track_element.addClass('playing');
+  }
+  // audio.get(0).volume = 0.1;
+  audio.bind("ended", playNext);
 
-      var audio_src = prefix + tracks_path + '/' + id.substring(0,2) + '/' + id.substring(2,4) + '/' + id.substring(4)  + '.' + track.extension;
-      var audio = $('<audio> <source src="'+ audio_src + '" /></audio>').appendTo(player);
-      audio.get(0).play();
-      audio.get(0).volume = 0.1;
-      audio.bind("ended", playNext);
+  setTimeout(function(){ $('#time_bar').trigger("showCurrentTime"); }, 100);
 
-      setTimeout(function(){ $('#time_bar').trigger("showCurrentTime"); }, 100);
+  // window.location.hash = '#' + track.id; // => scroll to the track html id ;-()
 
-      // window.location.hash = '#' + track.id; // => scroll to the track html id ;-()
-
-      info.html(track_info(track));
-      img.html(track_img(track));
-    }
-  });
+  info.html(track_info(track));
+  img.html(track_img(track));
 }
 
 function playNext() {
@@ -113,8 +56,10 @@ function playPrev() {
 
 function togglePlayPause() {
   var play_pause = $('#player .play_pause');
+  var track_li = $('#'+playing_track_id);
   if (play_pause.hasClass('playing')) {
     $('audio').each(function(){ this.pause(); });
+    track_li.removeClass("playing");
     play_pause.removeClass('playing');
     play_pause.addClass('stopped');
     play_pause.find('span').text('play');
@@ -123,6 +68,7 @@ function togglePlayPause() {
     var audio = $('#player audio');
     if (audio.length == 1) {
       audio.get(0).play();
+      track_li.addClass("playing");
       play_pause.removeClass('stopped');
       play_pause.addClass('playing');
       play_pause.find('span').text('pause');
@@ -130,169 +76,7 @@ function togglePlayPause() {
   }
 }
 
-var last_search = null;
 var timeout = null;
-
-function checkNewSearch(){
-  if (timeout) clearTimeout(timeout);
-  timeout = setTimeout(function() {
-    if ($('#player input').get(0).value != last_search) { showInListAfterSearchChange(); }
-  }, 200);
-}
-
-function buildArtistList() {
-
-  var artists_ul = $('ul.artists');
-  var albums_ul = $('ul.albums');
-  var tracks_ul = $('ul.tracks');
-  var last_artist, last_artist_li, last_album_id = null;
-  var current_album_ul = null;
-
-  var sql = "SELECT * from tracks";
-  // sql += " GROUP BY album"
-  sql += " ORDER BY artist, album, track_nb";
-
-  if (artists_ul) { artists_ul.html(""); }
-  if (albums_ul) { albums_ul.html(""); }
-  tracks_ul.html("");
-
-  // var time = Date.now(); var old_time = null;
-  executeSql(sql, [], function(result) {
-    if (artists_ul) { $('<li class="all selected">all</li>').appendTo(artists_ul); };
-    if (albums_ul) { $('<li class="all selected">all</li>').appendTo(albums_ul); };
-
-    // console.log(result.rows.length + " results");
-    // old_time = time; time = Date.now(); console.log("sql result in " + (time-old_time));
-    
-    for ( var i = 0; i < result.rows.length; i++) {
-      var track = result.rows.item(i);
-
-      if (track.artist != last_artist) {
-        last_artist = track.artist;
-        if (artists_ul) { last_artist_li = $("<li>"+last_artist+"</li>").appendTo(artists_ul); };
-      }
-      if (track.album_id != last_album_id) {
-        var album_class_id = 'album_' + track.album_id;
-        last_artist_li.addClass(album_class_id);
-        last_album_id = track.album_id;
-        if (albums_ul) { $('<li class="'+ album_class_id +'">'+
-          '<span class="album">'+track.album+'</span>'+
-          '<span class="artist" style="display:none;">'+track.artist+'</span>'+
-          "</li>").appendTo(albums_ul); }
-          
-      }
-    }
-
-    // old_time = time; time = Date.now(); console.log("quick browser view in " + (time-old_time));
-
-    var limit_albums_shown = 2000;
-    var albums_shown_count = 0;
-
-    last_album_id = null;
-
-    for ( i = 0; i < result.rows.length; i++) {
-      track = result.rows.item(i);
-
-      if (track.album_id != last_album_id) {
-        last_album_id = track.album_id;
-        albums_shown_count += 1;
-        if (albums_shown_count < limit_albums_shown) {
-          var li = $('<li class="album_'+ track.album_id +'"/>').appendTo(tracks_ul);
-          $('<div class="album_info"/>').
-            append('<p class="artist">' + track.artist + '</p>').
-            append('<p class="album">' + track.album + '</p>').
-            append('<p class="action"><a href="'+prefix+'albums/'+track.album_id+'">more...</a></p>').
-            append($('<div class="img"/>').append(track_img(track))).
-            appendTo(li);
-
-          current_album_ul = $('<ul class="tracks_in_album"/>').appendTo(li);
-        }
-      }
-      track_li(track).appendTo(current_album_ul);
-    }
-    // old_time = time; time = Date.now(); console.log("albums view in " + (time-old_time));
-  });
-}
-
-function showInListAfterSearchChange() {
-  var artists_ul = $('ul.artists');
-  var albums_ul = $('ul.albums');
-  var tracks_ul = $('ul.tracks');
-
-  var search = $('#player input').get(0).value;
-  last_search = search;
-  if (search) {
-    var sql = "SELECT id, album_id from tracks";
-    sql += " WHERE artist LIKE ? OR album LIKE ? OR title LIKE ?";
-    executeSql(sql, ['%'+search+'%', '%'+search+'%', '%'+search+'%'], function(result) {
-      $('ul li.match').removeClass('match');
-      $('ul.artists > li').hide();
-      $('ul.albums > li').hide();
-      $('ul.tracks > li').hide();
-      $('ul > li.all').show();
-      $('ul.tracks_in_album li').hide();
-      for ( var i = 0; i < result.rows.length; i++) {
-        var track = result.rows.item(i);
-        $('ul > li.album_'+track.album_id).addClass('match');
-        $('#'+track.id).show();
-      }
-      $('ul.artists > li.match').show();
-      showInListAfterLiClick($('ul.artists > li.selected'));
-      showInListAfterLiClick($('ul.albums > li.selected'));
-    });
-  } else {
-    $('ul li.match').removeClass('match');
-    $('ul.artists > li').show();
-    showInListAfterLiClick($('ul.artists > li.selected'));
-    showInListAfterLiClick($('ul.albums > li.selected'));
-    $('ul.tracks_in_album li').show();
-  }
-}
-
-function showInListAfterLiClick(li) {
-  var album_ids = null;
-  var match_class = ($('#player input').get(0).value) ? '.match' : '';
-
-  if (li.parent().hasClass('artists')) {
-    $('ul.artists li').removeClass('selected');
-    li.addClass('selected');
-    if (li.hasClass('all')) { // all artists selected => show all
-      $('ul.albums li'+match_class).show();
-      $('ul.tracks > li'+match_class).show();
-    } else { // an artist is selected => show his albums
-      $('ul.albums li').hide();
-      $('ul.tracks > li').hide();
-      album_ids = li.get(0).className.split(' ');
-      $('ul.albums li.all').show();
-      $.each(album_ids, function() {
-        if (this.match(/^album_/)) { $('ul.albums > li.'+this+match_class).show(); $('ul.tracks > li.'+this+match_class).show(); }
-      });
-      $('ul.albums > li').removeClass('selected');
-      $('ul.albums > li.all').addClass('selected');
-    }
-  } else if (li.parent().hasClass('albums')) {
-    $('ul.albums li').removeClass('selected');
-    li.addClass('selected');
-    if (li.hasClass('all')) { // all albums => see current selected artists and show it's albums in tracks
-      // or we could get albums from currently shown once.
-      var artist_li = $('ul.artists li.selected');
-      if (artist_li.hasClass('all')) {
-        $('ul.tracks > li'+match_class).show();
-      } else {
-        album_ids = artist_li.get(0).className.split(' ');
-        $.each(album_ids, function() {
-          if (this.match(/^album_/)) { $('ul.tracks > li.'+this+match_class).show(); }
-        });
-      }
-    } else { // a specific album => show only it's tracks
-      $('ul.tracks > li').hide();
-      album_ids = li.get(0).className.split(' ');
-      $.each(album_ids, function() {
-        if (this.match(/^album_/)) { $('ul.tracks > li.'+this+match_class).show(); }
-      });
-    }
-  }
-}
 
 function format_seconds(seconds) {
   var min = Math.floor(seconds / 60);
@@ -314,7 +98,7 @@ function showCurrentTime() {
 
 //html builders :
 function track_img(track) {
-  if (track.cover != "undefined") {
+  if (!(track.cover === undefined) && (track.cover != "undefined")) {
     var img_src = prefix + covers_path + '/' + track.cover.substring(0,2) + '/' + track.cover.substring(2,4) + '/' + track.cover.substring(4)  + '.png';
     return '<img src="' + img_src + '" />';
   } else {
@@ -326,7 +110,7 @@ function track_img(track) {
 function track_info(track) {
   return '' +
     '<span class="artist">' + track.artist + '</span>' + ' / ' + 
-    '<span class="album">' + track.album + '</span>' + ' / ' +
+    '<span class="album">' + track.album_name + '</span>' + ' / ' +
     '<span class="name">' + track.title + '</span>';
 }
 
@@ -343,36 +127,37 @@ function track_li(track) {
 
 function player_div() {
   var player = $('#player');
-  if (player.length == 0 ) { player = null; return; }
+  if (player.length == 0 ) { return null; }
 
   $('<div class="control disabled"/>').
     append('<div class="prev"><span>prev</span></div>').
     append('<div class="play_pause stopped"><span>play</span></div>').
     append('<div class="next"><span>next</span></div>').
     appendTo(player);
-  $('<div class="info" />').appendTo(player);
-  $('<div class="img" />').appendTo(player);
-  var duration = $('<div class="duration"></div>').appendTo(player);
+  var info_box = $('<div class="info_box" />');
+  $('<div class="info" />').appendTo(info_box);
+  $('<div class="img" />').appendTo(info_box);
+  var duration = $('<div class="duration"></div>').appendTo(info_box);
   $('<div id="current_time" />').appendTo(duration);
   $('<div id="time_bar" />').append('<div/>').appendTo(duration);
+  info_box.appendTo(player);
 
-  $('<div class="search" />').append('<input type="search"/>').appendTo(player);
   return player;
 }
 
 $(function() { 
-  var content = $('#content');
   var player = player_div();
 
-  initDatabase();
-
-  checkForTracks();
-
-  var browser = $("#browser");
-  if (browser.length == 1) {
-    var artists_ul = $("<ul class=\"artists\"></ul>").appendTo(browser);
-    var albums_ul = $("<ul class=\"albums\"></ul>").appendTo(browser);
-    var tracks_ul = $("<ul class=\"tracks\"></ul>").appendTo(browser);
+  if ($('.tracks.playable').length > 0) {
+    for (var i = 0; i < tracks.length; i++) {
+      track = tracks[i];
+      var track_li = $('#'+track.id);
+      $.data(track_li.get(0),'track', track);
+      track_li.append('<span class="control"/>');
+    }
+    if (tracks.length > 0) { playNow(tracks[0].id, false); };
+    $('.album .artist').hide();
+    $('.album .album_name').hide();
 
     var time_bar = $('#time_bar');
     time_bar.bind("showCurrentTime",showCurrentTime);
@@ -382,27 +167,7 @@ $(function() {
       showCurrentTime();
     });
 
-    buildArtistList();
-
-    artists_ul.click(function(event){
-      var target = event.target;
-      if (target.tagName == "LI") {
-        target = $(target);
-        showInListAfterLiClick(target);
-      }
-    });
-
-    albums_ul.click(function(event){
-      var target = event.target;
-      if (target.tagName == "SPAN") {
-        target = $(target).parent('li');
-      }
-      target = $(target);
-      showInListAfterLiClick(target);
-    });
-
-    tracks_ul.click(function(event) {
-      console.log(event)
+    $('.tracks').click(function(event) {
       var target = $(event.target);
       if (target.hasClass("control")) {
         var track_li = target.parents('li');
@@ -413,26 +178,22 @@ $(function() {
         } else { playNow(id); };
       }
     });
-
-  };
-
-  if (window.location.hash.length > 1) {
-    var id = window.location.hash.substring(1);
-    playNow(id);
   }
-  setInterval(function() {
-    if (window.location.hash.length > 1 && (window.location.hash.substring(1) != will_play_id)) {
-      playNow( window.location.hash.substring(1) );
-    }
-  }, 100);
+
+  // if (window.location.hash.length > 1) {
+  //   var id = window.location.hash.substring(1);
+  //   playNow(id);
+  // }
+  // setInterval(function() {
+  //   if (window.location.hash.length > 1 && (window.location.hash.substring(1) != will_play_id)) {
+  //     playNow( window.location.hash.substring(1) );
+  //   }
+  // }, 100);
   
 
-  player.find('.prev').click(playPrev);
-  player.find('.next').click(playNext);
-  player.find('.play_pause').click(togglePlayPause);
-
-  $('#player input').keydown(checkNewSearch);
-  $('#player input').click(checkNewSearch);
+  $('#player .prev').click(playPrev);
+  $('#player .next').click(playNext);
+  $('#player .play_pause').click(togglePlayPause);
 
   $(document).keypress(function (e) {
     if (e.target.tagName == "INPUT") { return ;}

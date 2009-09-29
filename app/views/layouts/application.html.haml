@@ -10,6 +10,8 @@
     = stylesheet_link_tag "application"
 
   %body
+    = javascript_tag("var prefix = '#{root_path}'")
+    
     .header
       - if current_user
         .nickname
@@ -19,7 +21,10 @@
             = f.submit 'logout'
 
     #content
+      = yield
+
+    #footer
       - if controller_name != "home"
         %p
-          = link_to "player", root_path
-      = yield
+          = link_to "home", root_path
+      

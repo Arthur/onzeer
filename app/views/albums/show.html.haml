@@ -1,27 +1,16 @@
+#player
+
 .album
   %span.artist
     =h @album.artist
-  %span.name
+  %span.album_name
     =h @album.name
 
-  %ul.tracks
-    = render :partial => "tracks/track", :collection => @album.tracks
+  .tracks.playable
+    %ul
+      = render :partial => "tracks/track", :collection => @album.tracks
 
-
-  %ul.comments
-    - @album.comments.each do |comment|
-      %li
-        %p.body
-          =h(comment.body)
-        %p.author
-          =h(comment.author.nickname)
-        / %p.date
-        /   =h(comment.created_at)
-        - if comment.author == current_user
-          %p.edit
-            = link_to "edit", edit_album_comment_path(@album, comment)
-    %li.new
-      = link_to "add a comment", new_album_comment_path(@album)
+  = javascript_tag "var tracks = #{@album.tracks.to_json};"
 
   %ul.votes
     %li.lovers
@@ -46,5 +35,21 @@
           %li.me
             - form_for :vote, :url => hate_album_path(@album) do |f|
               = f.submit "I hate it !"
+
+  .comments
+    %h3 Commentaires
+    %ul.comments
+      - @album.comments.each do |comment|
+        %li
+          %p.body
+            =h(comment.body)
+          %p.author
+            =h(comment.author.nickname)
+          / %p.date
+          /   =h(comment.created_at)
+          - if comment.author == current_user
+            %p.edit
+              = link_to "edit", edit_album_comment_path(@album, comment)
+    .new
+      = link_to "add a comment", new_album_comment_path(@album)
   
-        

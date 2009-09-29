@@ -10,6 +10,6 @@
       %span.artist
         =h album.artist
       %span.name
-        =h album.name
+        =link_to  h(album.name), album_path(album)
       %ul.tracks
         = render :partial => "tracks/track", :collection => album.tracks
