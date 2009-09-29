@@ -23,11 +23,13 @@ class AlbumsController < ApplicationController
   def like
     album.loved_by(current_user)
     album.save
+    UserVote.create(:album_id => album.id, :author_id => current_user.id, :note => 1)
     redirect_to album
   end
 
   def hate
     album.hated_by(current_user)
+    UserVote.create(:album_id => album.id, :author_id => current_user.id, :note => -1)
     logger.debug album.save
     logger.debug [album, album.votes].inspect
     redirect_to album

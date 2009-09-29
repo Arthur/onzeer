@@ -27,4 +27,8 @@ class User
     roles.include?("admin")
   end
 
+  def last_preferred_albums
+    UserVote.find_all_by_author_id(id, :order => 'created_at DESC', :limit => 10).map{|v| Album.find(v.album_id)}
+  end
+
 end

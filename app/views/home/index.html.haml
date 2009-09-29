@@ -1,4 +1,26 @@
 
+.last_albums
+  %h3
+    les derniers albums importés:
+    %ul
+      - @last_albums.each do |album|
+        %li
+          = link_to h("#{album.artist} - #{album.name}"), album_path(album)
+
+.preferred_albums
+  %h3
+    Albums préférés:
+    %ul
+      - User.all.each do |user|
+        - albums = user.last_preferred_albums
+        - unless albums.empty?
+          %li
+            %p
+              =h(user.nickname)
+              %ul
+                - albums.each do |album|
+                  %li
+                    = link_to h("#{album.artist} - #{album.name}"), album_path(album)
 %p
   = link_to "liste (très moche) des albums", albums_path
 %p
