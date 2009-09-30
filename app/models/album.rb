@@ -15,7 +15,7 @@ class Album
 
   def tracks
     return @tracks if @tracks
-    @tracks = Track.find(:all, :conditions => {:_id => track_ids})
+    @tracks = Track.find(:all, :conditions => {:_id => track_ids}, :order => 'nb')
   end
 
   def artist=(value)
