@@ -164,7 +164,7 @@ li.playing {
 .tracks ul li.playing .control{ background-image: url('../images/silk/control_pause.png'); }
 .tracks ul li.playing .control:hover{ background-image: url('../images/silk/control_pause_blue.png'); }
 
-.tracks ul li .track_nb { left: 2.5em; text-align: right;}
+.tracks ul li .track_nb { left: 2.5em; width: 1em; text-align: right;}
 .tracks ul li .title { left: 5em;  }
 .tracks ul li .duration { right: 1em; }
 .tracks ul li .edit { display:none;}
