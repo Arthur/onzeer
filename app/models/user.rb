@@ -28,7 +28,7 @@ class User
   end
 
   def last_preferred_albums
-    UserVote.find_all_by_author_id(id, :order => 'created_at DESC', :limit => 10).map{|v| Album.find(v.album_id)}
+    UserVote.find_all_by_author_id(id, :order => 'created_at DESC', :limit => 10).select{|v| v.note > 0}.map(&:album_id).uniq.map{|album_id| Album.find(album_id)}
   end
 
 end
