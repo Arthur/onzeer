@@ -20,6 +20,9 @@
           - form_for(:session, :url => session_path, :html => {:method => :delete}) do |f|
             = f.submit 'logout'
 
+    .notices
+      = flash[:error]
+
     #content
       = yield
 

@@ -21,7 +21,8 @@ class TracksController < ApplicationController
     if @track.save
       redirect_to tracks_path(:mine => true)
     else
-      logger.info("could not save track: " + @track.errors.inspect)
+      logger.info(["could not save track: ", @track.errors, @track.content_type, @track.track_info.to_hash].inspect)
+      flash[:error] = "<pre>" + ["could not save track: ", @track.errors, @track.content_type, @track.track_info.to_hash].map(&:inspect).join('<br/>') + "</pre>"
       render :new
     end
   end
