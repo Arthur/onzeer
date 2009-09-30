@@ -85,6 +85,14 @@ class Track
     @track_info ||= TrackInfo.new(file, content_type)
   end
 
+  def self.public_cover_path(cover)
+    cover && ['cover_files', cover[0..1], cover[2..3], cover[4..-1]+'.png'].join('/')
+  end
+
+  def public_cover_path
+    self.class.public_cover_path(cover)
+  end
+
   def save_cover
     if cover = track_info[:cover]
       md5 = Digest::MD5.hexdigest(track_info[:cover])

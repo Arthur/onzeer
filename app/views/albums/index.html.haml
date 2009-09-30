@@ -1,15 +1,19 @@
 - if @albums.total_pages > 1
   %p.pagination
+    = link_to "<<", albums_path(:page => 1) if @albums.current_page > 2
     = link_to "<", albums_path(:page => @albums.previous_page) if @albums.previous_page
     = content_tag :span, @albums.current_page
     = link_to ">", albums_path(:page => @albums.next_page) if @albums.next_page
+    = link_to ">>", albums_path(:page => @albums.total_pages) if @albums.current_page < @albums.total_pages - 1
 
 %ul.albums
   - @albums.each do |album|
     %li
+      .cover
+        = cover_img_tag(album)
       %span.artist
         =h album.artist
       %span.name
         =link_to  h(album.name), album_path(album)
-      %ul.tracks
-        = render :partial => "tracks/track", :collection => album.tracks
+      / %ul.tracks
+      /   = render :partial => "tracks/track", :collection => album.tracks

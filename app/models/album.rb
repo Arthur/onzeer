@@ -8,6 +8,7 @@ class Album
   key :artist, String, :required => true
   key :name, String, :required => true
   key :track_ids, Array, :required => true
+  key :cover, String
   timestamps
 
   many :votes
@@ -36,8 +37,18 @@ class Album
   end
   protected :update_tracks
 
+  def find_cover
+    track = tracks.detect{|t| t.cover}
+    self.cover = track && track.cover
+  end
+
+  def public_cover_path
+    cover && Track.public_cover_path(cover)
+  end
+
   def add_track(track)
     track_ids << track.id unless track_ids.include?(track.id)
+    album.cover ||= track.cover
   end
 
   def remove_track(track)

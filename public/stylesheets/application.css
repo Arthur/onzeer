@@ -191,4 +191,9 @@ li.playing {
   -webkit-border-top-right-radius: 0;
 }
 
-
+.albums li {
+  height: 45px;
+  position: relative;
+  list-style-type: none;
+}
+.albums li .cover { float: left;; }
