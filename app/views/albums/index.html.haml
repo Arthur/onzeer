@@ -1,10 +1,11 @@
 - if @albums.total_pages > 1
   %p.pagination
-    = link_to "<<", albums_path(:page => 1) if @albums.current_page > 2
-    = link_to "<", albums_path(:page => @albums.previous_page) if @albums.previous_page
-    = content_tag :span, @albums.current_page
-    = link_to ">", albums_path(:page => @albums.next_page) if @albums.next_page
-    = link_to ">>", albums_path(:page => @albums.total_pages) if @albums.current_page < @albums.total_pages - 1
+    - (1..@albums.total_pages).each do |page|
+      - if page == @albums.current_page
+        %span.current
+          = page
+      - else
+        = link_to page, albums_path(:page => page)
 
 %ul.albums
   - @albums.each do |album|
@@ -17,3 +18,12 @@
         =link_to  h(album.name), album_path(album)
       / %ul.tracks
       /   = render :partial => "tracks/track", :collection => album.tracks
+
+- if @albums.total_pages > 1
+  %p.pagination
+    - (1..@albums.total_pages).each do |page|
+      - if page == @albums.current_page
+        %span.current
+          = page
+      - else
+        = link_to page, albums_path(:page => page)
