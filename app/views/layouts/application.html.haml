@@ -23,7 +23,7 @@
     .notices
       = flash[:error]
 
-    #content
+    #content{:class => controller_name}
       = yield
 
     #footer

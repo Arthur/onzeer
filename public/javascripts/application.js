@@ -195,6 +195,12 @@ $(function() {
   $('#player .next').click(playNext);
   $('#player .play_pause').click(togglePlayPause);
 
+  $('.home .cover_album').click(function (e) {
+    console.log([e, this])
+    var target = $(this);
+    window.location = target.find('a').attr('href');
+  });
+
   $(document).keypress(function (e) {
     if (e.target.tagName == "INPUT") { return ;}
     if (e.which == 32 || (65 <= e.which && e.which <= 65 + 25) || (97 <= e.which && e.which <= 97 + 25)) {

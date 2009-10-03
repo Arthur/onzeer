@@ -11,7 +11,7 @@ module ApplicationHelper
 
   def album_div(album)
     content_tag(:div,
-      cover_img_tag(album, 80) +
+      cover_img_tag(album) +
       content_tag(:div, content_tag(:span, h(album.artist), :class => 'artist') + link_to(h(album.name), album_path(album), :class => 'album_name')),
       :class => 'cover_album')
   end

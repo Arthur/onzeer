@@ -48,7 +48,7 @@ class Album
 
   def add_track(track)
     track_ids << track.id unless track_ids.include?(track.id)
-    album.cover ||= track.cover
+    self.cover ||= track.cover
   end
 
   def remove_track(track)
