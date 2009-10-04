@@ -218,7 +218,7 @@ li.playing {
 }
 .albums_group ul li {
   float: left;
-  width:40; margin: 2px;
+  width:40px; margin: 2px;
   border: 1px solid #999;
 }
 /* show details only on hover */
