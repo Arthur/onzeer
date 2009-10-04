@@ -95,7 +95,7 @@ class Track
 
   def save_cover
     if cover = track_info[:cover]
-      md5 = Digest::MD5.hexdigest(track_info[:cover])
+      md5 = Digest::MD5.hexdigest(cover)
       cover_file = Rails.root.join('public', 'cover_files', md5[0..1], md5[2..3], md5[4..-1]+'.png')
       self.cover = md5
       unless File.exist?(cover_file)
