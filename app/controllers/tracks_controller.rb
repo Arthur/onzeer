@@ -44,6 +44,12 @@ class TracksController < ApplicationController
     end
   end
 
+  def just_listened
+    if TrackListening.create(:user_id => current_user.id, :track_id => params[:id])
+      head :ok
+    end
+  end
+
   protected
   def authorized?
     ["index", "show", "new", "create"].include?(action_name) || current_user.admin?

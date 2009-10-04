@@ -37,7 +37,7 @@ function playNow(id, auto) {
     track_element.addClass('playing');
   }
   // audio.get(0).volume = 0.1;
-  audio.bind("ended", playNext);
+  audio.bind("ended", trackEnded);
 
   setTimeout(function(){ $('#time_bar').trigger("showCurrentTime"); }, 100);
 
@@ -45,6 +45,12 @@ function playNow(id, auto) {
 
   info.html(track_info(track));
   img.html(track_img(track));
+}
+
+function trackEnded() {
+  var just_played_id = will_play_id;
+  playNext();
+  $.post(prefix + 'tracks/' + just_played_id + '/just_listened');
 }
 
 function playNext() {

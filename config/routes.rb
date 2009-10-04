@@ -4,7 +4,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :users
 
-  map.resources :tracks
+  map.resources :tracks, :member => {:just_listened => :post}
 
   map.resources :albums, :member => {:like => :post, :hate => :post}, :has_many => [:comments]
 
