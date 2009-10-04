@@ -201,24 +201,55 @@ li.playing {
 }
 .albums li .cover { float: left; }
 
-/*.home ul { border: 1px solid red; }*/
-/*.home li { border: 1px solid #999;}*/
 
-.home ul { height: 50px; }
-.home li { float: left; width:40; margin: 2px; }
-.home .cover_album > div { display:none; }
-.home .cover_album { cursor: pointer; }
+/* albums_group : 10 albums in one line, and details by line on hover */
+.albums_group {
+  position: relative; /* ul are in absolute in it */
+  height: 100px;
+}
 
-.home ul:hover { height: auto; }
-.home ul:hover li { clear: both; width: 100%; position: relative; margin: 5px;}
+.albums_group h3 { height: 20px; }
+.albums_group ul {
+  position: absolute;
+  top: 40px; left: 50px; 
+  height: 46px; width: 460px;
+  border: 1px solid #999;
+  background-color: #DDD;
+}
+.albums_group ul li {
+  float: left;
+  width:40; margin: 2px;
+  border: 1px solid #999;
+}
+/* show details only on hover */
+.albums_group ul li .cover_album > div { display:none; }
 
-.home ul:hover li .cover_album > div { display:block; }
-.home ul:hover li .cover_album span,
-.home ul:hover li .cover_album a {
+.albums_group ul:hover {
+  height: auto;
+  z-index: 999; /* other albums_group stay behind us */
+}
+
+.albums_group ul:hover li {
+  float: none; /*no more floating*/
+  position: relative; /*child in absolute*/
+}
+
+.albums_group ul:hover li:hover {  /*to show that there are clickable*/
+  cursor: pointer;
+  background-color: #bbb;
+}
+/* details displaying */
+.albums_group ul:hover li .cover_album > div { display:block; }
+.albums_group ul:hover li .cover_album span,
+.albums_group ul:hover li .cover_album a {
   display:block;
   position: absolute;
   left: 50px;
 }
-.home li a { text-decoration: none; color: black;}
-.home ul:hover li .cover_album span { top: 0.1em; }
-.home ul:hover li .cover_album a    { top: 1.1em; }
+.albums_group li a { text-decoration: none; color: black;}
+.albums_group ul:hover li .cover_album span { top: 0.1em; }
+.albums_group ul:hover li .cover_album a    { top: 1.1em; }
+
+.preferred_albums .albums_group { height: 80px; }
+.preferred_albums .albums_group ul { top: 20px; }
+

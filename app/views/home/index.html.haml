@@ -1,26 +1,25 @@
 
-.last_albums
+.last_albums.albums_group
   %h3
     les derniers albums importés:
-    %ul
-      - @last_albums.each do |album|
-        %li
-          = album_div(album)
-
+  %ul.test
+    - @last_albums.each do |album|
+      %li
+        = album_div(album)
 .preferred_albums
   %h3
     Albums préférés:
-    %ul
-      - User.all.each do |user|
-        - albums = user.last_preferred_albums
-        - unless albums.empty?
-          %li
-            %p
-              =h(user.nickname)
-              %ul
-                - albums.each do |album|
-                  %li
-                    = album_div(album)
+  %ul
+    - User.all.each do |user|
+      - albums = user.last_preferred_albums
+      - unless albums.empty?
+        %li
+          .albums_group
+            =h(user.nickname)
+            %ul
+              - albums.each do |album|
+                %li
+                  = album_div(album)
 %p
   = link_to "liste (très moche) des albums", albums_path
 %p
