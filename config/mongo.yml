@@ -1,0 +1,14 @@
+development: &global_settings
+  database: webmusicplayer_development
+  username: 
+  password: 
+  host: 127.0.0.1
+  port: 27017
+
+test:
+  database: webmusicplayer_test
+  <<: *global_settings
+
+production:
+  database: webmusicplayer_production
+  <<: *global_settings
