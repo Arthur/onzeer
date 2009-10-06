@@ -3,7 +3,7 @@
 require 'mongomapper'
 
 begin
-  mongo_config_file = File.join(WWW_ROOT, "config/mongo.yml")
+  mongo_config_file = File.join(Rails.root, "config/mongo.yml")
   mongo_config = YAML.load_file(mongo_config_file)[Rails.env]
 rescue
   raise IOError, "config/mongo.yml could not be loaded."
