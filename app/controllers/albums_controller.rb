@@ -1,7 +1,13 @@
 class AlbumsController < ApplicationController
 
   def index
-    @albums = Album.paginate(params.merge(:order => 'artist, name', :per_page => 50))
+    conditions = {}
+    if q = params[:q]
+      # conditions = {:artist => /#{q}/i, :name => /#{q}/i}
+      # see http://www.mongodb.org/display/DOCS/OR+operations+in+query+expressions
+      conditions = { "$where" => "this.name.match(/#{q}/i) || this.artist.match(/#{q}/i)" }
+    end
+    @albums = Album.paginate(:order => 'artist, name', :per_page => 50, :conditions => conditions, :page => params[:page])
   end
 
   def show

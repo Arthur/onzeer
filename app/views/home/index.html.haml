@@ -20,6 +20,15 @@
               - albums.each do |album|
                 %li
                   = album_div(album)
+
+.search
+  %h3
+    Chercher un album
+  - form_tag albums_path, :method => :get do
+    = text_field_tag :q
+    = submit_tag "Rechercher"
+  
+
 %p
   = link_to "liste (très moche) des albums", albums_path
 %p

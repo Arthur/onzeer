@@ -5,7 +5,7 @@
         %span.current
           = page
       - else
-        = link_to page, albums_path(:page => page)
+        = link_to page, albums_path(params.merge(:page => page))
 
 %ul.albums
   - @albums.each do |album|
