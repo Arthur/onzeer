@@ -4,7 +4,7 @@
  * @license Mit Style License
  */
 
-var sendFile = 1024000; // maximum allowed file size
+var sendFile = 1024000*20; // maximum allowed file size
                         // should be smaller or equal to the size accepted in the server for each file
 
 // function to upload a single file via handler
@@ -47,10 +47,11 @@ sendFile = (function(toString, maxSize){
                 }, 15);
             }
         };
-        xhr.open("post", handler.url || "?upload=true", true);
+        xhr.open("post", handler.url, true);
         xhr.setRequestHeader("If-Modified-Since", "Mon, 26 Jul 1997 05:00:00 GMT");
         xhr.setRequestHeader("Cache-Control", "no-cache");
         xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+        xhr.setRequestHeader("X-Input-Name", handler.input_name);
         xhr.setRequestHeader("X-File-Name", handler.file.fileName);
         xhr.setRequestHeader("X-File-Size", handler.file.fileSize);
         xhr.setRequestHeader("Content-Type", "multipart/form-data");
@@ -85,37 +86,3 @@ function sendMultipleFiles(handler){
     };
     return  handler;
 };
-
-/** basic server side example
- * @language    PHP
-<?php
-// e.g. url:"page.php?upload=true" as handler property
-if(isset($_GET['upload']) && $_GET['upload'] === 'true'){
-    $headers = getallheaders();
-    if(
-        // basic checks
-        isset(
-            $headers['Content-Type'],
-            $headers['Content-Length'],
-            $headers['X-File-Size'],
-            $headers['X-File-Name']
-        ) &&
-        $headers['Content-Type'] === 'multipart/form-data' &&
-        $headers['Content-Length'] === $headers['X-File-Size']
-    ){
-        // create the object and assign property
-        $file = new stdClass;
-        $file->name = basename($headers['X-File-Name']);
-        $file->size = $headers['X-File-Size'];
-        $file->content = file_get_contents("php://input");
-        
-        // if everything is ok, save the file somewhere
-        if(file_put_contents('files/'.$file->name, $file->content))
-            exit('OK');
-    }
-    
-    // if there is an error this will be the output instead of "OK"
-    exit('Error');
-}
-?>
- */

@@ -22,7 +22,7 @@ class Track
   after_save :set_album
   after_save :move_file
 
-  attr_accessor :file_data, :content_type
+  attr_accessor :file_data, :content_type, :original_path
 
   def duration
     min = seconds / 60
@@ -31,17 +31,18 @@ class Track
 
   def file_data=(data)
     @file_data = data
-    return unless data && data.respond_to?(:path) && data.respond_to?(:content_type)
-    RAILS_DEFAULT_LOGGER.debug([data, data.path, data.content_type].inspect)
+    return unless data && data.respond_to?(:path) && (data.respond_to?(:content_type) || data.respond_to?(:original_path))
+    RAILS_DEFAULT_LOGGER.debug(["file_data", data, data.path, data.content_type, data.original_path].inspect)
     self.file = file_data.path
-    self.content_type = file_data.content_type
+    self.content_type   = data.content_type   if data.respond_to?(:content_type)
+    self.original_path  = data.original_path  if data.respond_to?(:original_path)
     set_attributes_from_file
   end
 
   def move_file
-    RAILS_DEFAULT_LOGGER.debug(["save_file", file_data].inspect)
     if file_data
       path = Rails.root.join('storage', 'tracks', "user_#{user_id}", id[0..1], id[2..3], id[4..-1]+'.'+format)
+      RAILS_DEFAULT_LOGGER.debug(["move_file", file_data, path].inspect)
       FileUtils.mkdir_p(File.dirname(path))
       FileUtils.mv(file, path)
       self.file = path
@@ -82,7 +83,7 @@ class Track
   end
 
   def track_info
-    @track_info ||= TrackInfo.new(file, content_type)
+    @track_info ||= TrackInfo.new(file, content_type, original_path)
   end
 
   def self.public_cover_path(cover)

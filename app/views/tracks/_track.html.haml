@@ -2,7 +2,7 @@
   %span.artist
     =h track.artist
   %span.album_name
-    =link_to h(track.album_name), album_path(track.album)
+    =link_to h(track.album_name), album_path(track.album) if track.album
   %span.track_nb
     = h track.nb
   %span.title
