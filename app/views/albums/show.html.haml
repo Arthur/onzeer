@@ -12,6 +12,10 @@
 
   = javascript_tag "var tracks = #{@album.tracks.to_json};"
 
+  - if current_user.admin?
+    %p.edit
+      = link_to :edit, edit_album_path(@album)
+
   %ul.links
     - if @album.musicbrainz_release_id
       %li.musicbrainz
