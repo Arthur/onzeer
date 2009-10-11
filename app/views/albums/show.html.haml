@@ -12,6 +12,15 @@
 
   = javascript_tag "var tracks = #{@album.tracks.to_json};"
 
+  %ul.links
+    - if @album.musicbrainz_release_id
+      %li.musicbrainz
+        = link_to "MusicBrainz.org", "http://musicbrainz.org/release/#{@album.musicbrainz_release_id}.html"
+  
+    - if @album.amazon_asin
+      %li.amazon{:class => "asin_#{@album.amazon_asin}"}
+        = link_to "Amazon", "http://www.amazon.fr/gp/product/#{@album.amazon_asin}"
+
   %ul.votes
     %li.lovers
       %h4

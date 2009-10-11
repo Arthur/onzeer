@@ -9,6 +9,9 @@ class Album
   key :name, String, :required => true
   key :track_ids, Array, :required => true
   key :cover, String
+  key :amazon_asin, String
+  key :musicbrainz_release_id, String
+
   timestamps
 
   many :votes
@@ -74,4 +77,26 @@ class Album
     @haters ||= votes.select{|v| v.note < 0}.map(&:author)
   end
 
+  def musicbrainz_query
+    {
+      :query=>"#{name} AND artist:\"#{artist}\"",
+      :type=> "release",
+      :adv=> "on",
+      :handlearguments => 1
+    }
+  end
+# http://musicbrainz.org/doc/MusicBrainzIdentifier
+# http://musicbrainz.org/doc/Disc_ID_Calculation
+  def discid
+    # CDDB1 identifies CDs with a 32-bit number, usually displayed as a hexadecimal number containing 8 digits: XXYYYYZZ.
+    # The first two digits (labeled XX) represent a checksum based on the starting times of each track on the CD, mod 255.
+    # The next four digits (YYYY) represent the total time of the CD in seconds from the start of the first track to the end of the last track.
+    # The last two digits (ZZ) represent the number of tracks on the CD.
+    return @discid if @discid
+    checksum = 0
+    checksum = checksum.modulo(255)
+    total_time = tracks.map(&:seconds).sum
+    nb = tracks.length
+    @discid = "%02x%04x%02x" % [checksum, total_time, nb]
+  end
 end
