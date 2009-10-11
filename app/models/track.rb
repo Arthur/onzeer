@@ -16,6 +16,7 @@ class Track
   key :format, String, :required => true
   key :cover, String
   key :file, String, :required => true
+  key :compilation, Boolean
 
   key :user_id, String, :required => true
 
@@ -53,9 +54,11 @@ class Track
   end
 
   def set_album
-    if album.nil? || album.artist != artist || album.name != album_name
+    album_artist = artist
+    album_artist = "Various" if compilation
+    if album.nil? || album.artist != album_artist || album.name != album_name
       old_album = album
-      self.album = Album.find_or_create_by_artist_and_name(artist, album_name)
+      self.album = Album.find_or_create_by_artist_and_name(album_artist, album_name)
       album.add_track(self)
       album.save
       if old_album
