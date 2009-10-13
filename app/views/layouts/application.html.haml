@@ -9,6 +9,8 @@
     = javascript_include_tag "application"
     = stylesheet_link_tag "application"
 
+    = yield :head
+
   %body
     = javascript_tag("var prefix = '#{root_path}'")
     

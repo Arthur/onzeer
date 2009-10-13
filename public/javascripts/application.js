@@ -107,7 +107,9 @@ function track_img(track) {
   if (!(track.cover === undefined) && (track.cover != "undefined")) {
     var img_src = prefix + covers_path + '/' + track.cover.substring(0,2) + '/' + track.cover.substring(2,4) + '/' + track.cover.substring(4)  + '.png';
     return '<img src="' + img_src + '" />';
-  } else {
+  } else if (track.asin){
+    return '<img src="http://ec1.images-amazon.com/images/P/'+ track.asin + '.01.MZZZZZZZ.jpg" alt="?" />';
+  } else{
     return '<img src="'+ prefix + 'images/unknow_cover.png" alt="?" />';
   };
   return undefined;
@@ -155,8 +157,13 @@ $(function() {
   var player = player_div();
 
   if ($('.tracks.playable').length > 0) {
+    var asin = null;
+    if ($('.album .amazon').length > 0) {
+      asin = $('.album .amazon').get(0).className.match(/asin_(\w+)/)[1];
+    }
     for (var i = 0; i < tracks.length; i++) {
       track = tracks[i];
+      track.asin = asin;
       var track_li = $('#'+track.id);
       $.data(track_li.get(0),'track', track);
       track_li.append('<span class="control"/>');

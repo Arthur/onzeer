@@ -1,5 +1,8 @@
+- content_for :head do
+  = javascript_include_tag "send_file"
+  = javascript_include_tag "upload"
 
-Ajouter un fichier :
+Ajouter un ou plusieurs fichiers :
 - form_for(@track, :html => {:multipart => true}) do |f|
   = f.file_field(:file_data)
-  = submit_tag
+  = submit_tag "Uploader"

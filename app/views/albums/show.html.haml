@@ -12,6 +12,19 @@
 
   = javascript_tag "var tracks = #{@album.tracks.to_json};"
 
+  - if current_user.admin?
+    %p.edit
+      = link_to :edit, edit_album_path(@album)
+
+  %ul.links
+    - if !@album.musicbrainz_release_id.blank?
+      %li.musicbrainz
+        = link_to "MusicBrainz.org", "http://musicbrainz.org/release/#{@album.musicbrainz_release_id}.html"
+  
+    - if !@album.amazon_asin.blank?
+      %li.amazon{:class => "asin_#{@album.amazon_asin}"}
+        = link_to "Amazon", "http://www.amazon.fr/gp/product/#{@album.amazon_asin}"
+
   = render :partial => "votes"
 
   = render :partial => "comments"
