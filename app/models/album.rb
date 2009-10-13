@@ -29,6 +29,10 @@ class Album
     self[:name] = value
   end
 
+  def save_user_comment_for(comment)
+    UserComment.create(:album_id => id, :comment_id => comment.id, :author_id => comment.author_id)
+  end
+
   def update_tracks
     return unless @need_tracks_update
     tracks.each do |track|

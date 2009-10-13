@@ -10,6 +10,7 @@ class CommentsController < ApplicationController
     @comment = album.comments.last
     @comment.author = current_user
     @album.save
+    @album.save_user_comment_for @comment
     create_or_update_response
   end
 
