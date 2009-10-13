@@ -204,7 +204,11 @@ $(function() {
   $('.home .cover_album').click(function (e) {
     console.log([e, this])
     var target = $(this);
-    window.location = target.find('a').attr('href');
+    var url = target.find('a').attr('href')
+    // window.location = url;
+    window.open(url);
+    // window.open(url,'player', 'menubar=no, status=no, scrollbars=no, menubar=no');
+    e.stopPropagation();
   });
 
   $(document).keypress(function (e) {
@@ -215,4 +219,45 @@ $(function() {
       if ( 'n' == String.fromCharCode(e.which) ) { playNext(); }
     }
   });
+
+  // Ajax for voting
+  $('.album .votes input[type="submit"]').live('click', function(event) {
+    var form = $(this).parents('form');
+    $.post(form.attr('action'), form.serialize(), function (data) {
+      $('.votes').replaceWith(data);
+    });
+    return false;
+  });
+
+  // Ajax for comments edition
+  $('.album .comments .edit a').live('click', function(event) {
+    var a = $(this);
+    $.get(a.attr('href'), function (data) {
+      a.parents('li').html($('.album form', data).get(0));
+      $('.album form input[type="text"]').focus();
+    });
+    return false;
+  });
+
+  $('.album .comments .new a').live('click', function(event) {
+    var a = $(this);
+    $.get(a.attr('href'), function (data) {
+      a.parent('div').html($('.album form', data).get(0));
+      $('.album form input[type="text"]').focus();
+    });
+    return false;
+  });
+
+  $('.album .comments input[type="submit"]').live('click', function(event) {
+    var form = $(this).parents('form');
+    $.post(form.attr('action'), form.serialize(), function (data) {
+      $('.comments').replaceWith(data);
+    });
+    return false;
+  });
+
+});
+
+jQuery.ajaxSetup({ 
+  'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")} 
 });

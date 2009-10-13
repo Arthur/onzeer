@@ -30,18 +30,24 @@ class AlbumsController < ApplicationController
     album.loved_by(current_user)
     album.save
     UserVote.create(:album_id => album.id, :author_id => current_user.id, :note => 1)
-    redirect_to album
+    like_or_hate_response
   end
 
   def hate
     album.hated_by(current_user)
+    album.save
     UserVote.create(:album_id => album.id, :author_id => current_user.id, :note => -1)
-    logger.debug album.save
-    logger.debug [album, album.votes].inspect
-    redirect_to album
+    like_or_hate_response
   end
 
   protected
+  def like_or_hate_response
+    respond_to do |format|
+      format.html { redirect_to album }
+      format.js { render :partial => "votes"}
+    end
+  end
+
   def album
     @album ||= Album.find(params[:id])
   end

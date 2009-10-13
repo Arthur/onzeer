@@ -10,7 +10,7 @@ class CommentsController < ApplicationController
     @comment = album.comments.last
     @comment.author = current_user
     @album.save
-    redirect_to @album
+    create_or_update_response
   end
 
   def edit
@@ -22,10 +22,18 @@ class CommentsController < ApplicationController
     @comment.attributes = params[:comment]
     @comment.author = current_user
     @album.save
-    redirect_to @album
+    create_or_update_response
   end
 
   protected
+
+  def create_or_update_response
+    respond_to do |format|
+      format.html { respond_to album }
+      format.js { render :partial => 'albums/comments' }
+    end
+  end
+
   def album
     @album ||= Album.find(params[:album_id])
   end
