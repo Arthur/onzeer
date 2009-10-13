@@ -1,0 +1,23 @@
+%ul.votes
+  %li.lovers
+    %h4
+      Lovers
+    %ul
+      - @album.lovers.each do |account|
+        %li
+          =h(account.nickname)
+      - unless @album.lovers.include?(current_user)
+        %li.me
+          - form_for :vote, :url => like_album_path(@album) do |f|
+            = f.submit "I like it !"
+  %li.haters
+    %h4
+      Haters
+    %ul
+      - @album.haters.each do |account|
+        %li
+          = h(account.nickname)
+      - unless @album.haters.include?(current_user)
+        %li.me
+          - form_for :vote, :url => hate_album_path(@album) do |f|
+            = f.submit "I hate it !"

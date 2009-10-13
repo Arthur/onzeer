@@ -12,44 +12,6 @@
 
   = javascript_tag "var tracks = #{@album.tracks.to_json};"
 
-  %ul.votes
-    %li.lovers
-      %h4
-        Lovers
-      %ul
-        - @album.lovers.each do |account|
-          %li
-            =h(account.nickname)
-        - unless @album.lovers.include?(current_user)
-          %li.me
-            - form_for :vote, :url => like_album_path(@album) do |f|
-              = f.submit "I like it !"
-    %li.haters
-      %h4
-        Haters
-      %ul
-        - @album.haters.each do |account|
-          %li
-            = h(account.nickname)
-        - unless @album.haters.include?(current_user)
-          %li.me
-            - form_for :vote, :url => hate_album_path(@album) do |f|
-              = f.submit "I hate it !"
+  = render :partial => "votes"
 
-  .comments
-    %h3 Commentaires
-    %ul.comments
-      - @album.comments.each do |comment|
-        %li
-          %p.body
-            =h(comment.body)
-          %p.author
-            =h(comment.author.nickname)
-          / %p.date
-          /   =h(comment.created_at)
-          - if comment.author == current_user
-            %p.edit
-              = link_to "edit", edit_album_comment_path(@album, comment)
-    .new
-      = link_to "add a comment", new_album_comment_path(@album)
-  
+  = render :partial => "comments"

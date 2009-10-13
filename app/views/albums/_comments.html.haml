@@ -1,0 +1,16 @@
+.comments
+  %h3 Commentaires
+  %ul.comments
+    - @album.comments.each do |comment|
+      %li
+        %p.body
+          =h(comment.body)
+        %p.author
+          =h(comment.author.nickname)
+        / %p.date
+        /   =h(comment.created_at)
+        - if comment.author == current_user
+          %p.edit
+            = link_to "edit", edit_album_comment_path(@album, comment)
+  .new
+    = link_to "add a comment", new_album_comment_path(@album)
