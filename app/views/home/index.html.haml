@@ -1,3 +1,16 @@
+.last_comments
+  %h3 les derniers commentaires :
+  %ul
+    - @last_comments.each do |user_comment|
+      %li
+        %p.cover
+          = cover_img_tag(user_comment.album, 20)
+        %p.album_name
+          = user_comment.album && link_to(user_comment.album.name, album_path(user_comment.album))
+        %p.author
+          = user_comment.comment.author.nickname
+        %p.comment
+          = user_comment.comment.body
 
 .last_albums.albums_group
   %h3

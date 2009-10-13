@@ -7,4 +7,10 @@ class UserComment
   key :author_id, String, :required => true
   timestamps
 
+  belongs_to :album
+
+  def comment
+    @comment ||= album.comments.detect{|c| c.id == comment_id}
+  end
+
 end
