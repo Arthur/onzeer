@@ -7,13 +7,7 @@ class UserVote
   key :note, Integer, :required => true
   timestamps
 
-
-  def album
-    @album ||= Album.find(album_id)
-  end
-
-  def author
-    @author ||= User.find(author_id)
-  end
+  belongs_to :album
+  belongs_to :author, :class_name => "User"
 
 end

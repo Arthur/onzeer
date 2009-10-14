@@ -8,6 +8,7 @@ class UserComment
   timestamps
 
   belongs_to :album
+  belongs_to :author, :class_name => "User"
 
   def comment
     @comment ||= album.comments.detect{|c| c.id == comment_id}
