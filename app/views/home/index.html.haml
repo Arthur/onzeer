@@ -1,3 +1,18 @@
+.last_listenings
+  %h3 les derniers morceaux écoutés :
+  %ul
+    - @last_listenings.each do |track_listening|
+      %li
+        %p.cover
+          = cover_img_tag(track_listening.album, 20)
+        %p.album_name
+          = track_listening.album && link_to(track_listening.album.name, album_path(track_listening.album))
+        %p.title
+          = track_listening.track && track_listening.track.title
+        %p.author
+          = track_listening.user && track_listening.user.nickname
+          
+
 .last_comments
   %h3 les derniers commentaires :
   %ul

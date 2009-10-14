@@ -254,9 +254,13 @@ li.playing {
 .preferred_albums .albums_group { height: 80px; }
 .preferred_albums .albums_group ul { top: 20px; }
 
-.last_comments .cover_album div { display: none; }
+.last_listenings li,
 .last_comments li { position: relative; width: 500px; height: 25px;}
+.last_listenings p,
 .last_comments p { position: absolute; bottom: 5px; height: 20px; overflow-x: hidden; overflow-y: hidden;}
+.last_listenings p.album_name,
 .last_comments p.album_name { left: 25px;}
+.last_listenings p.title,
 .last_comments p.comment { left: 225px; width: 225px;}
+.last_listenings p.author,
 .last_comments p.author { left: 450px;}
