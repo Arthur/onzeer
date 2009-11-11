@@ -1,4 +1,5 @@
 class TracksController < ApplicationController
+  skip_before_filter [:verify_authenticity_token, :login_required], :only => [:create]
 
   def index
     respond_to do |format|
@@ -17,7 +18,7 @@ class TracksController < ApplicationController
 
   def create
     @track = Track.new(params[:track])
-    @track.user_id = current_user.id
+    @track.user_id = current_user.id if current_user
     if @track.save
       redirect_to tracks_path(:mine => true)
     else
