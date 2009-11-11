@@ -18,7 +18,7 @@ class Track
   key :file, String, :required => true
   key :compilation, Boolean
 
-  key :user_id, String, :required => true
+  key :user_id, String#, :required => true
 
   after_save :set_album
   after_save :move_file
