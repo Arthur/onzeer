@@ -117,9 +117,13 @@ function track_img(track) {
 
 function track_info(track) {
   return '' +
+    '<p>'+
     '<span class="artist">' + track.artist + '</span>' + ' / ' + 
-    '<span class="album">' + track.album_name + '</span>' + ' / ' +
-    '<span class="name">' + track.title + '</span>';
+    '<span class="album">' + track.album_name + '</span>' +
+    '</p>'+
+    '<p>'+
+    '<span class="name">' + track.title + '</span>' +
+    '</p>';
 }
 
 function track_li(track) {

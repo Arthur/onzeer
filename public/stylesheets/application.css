@@ -78,12 +78,14 @@ ul li { list-style-type: none; }
 #player .duration {
   left: 100px;
 }
-#player .info { top: 15px; }
-#player .duration { top: 40px; height: 10px;}
+#player .info { top: 5px; }
+
+#player #time_bar { height: 6px; }
+#player #current_time { height: 20px; }
+#player .duration { top: 50px; height: 30px;}
 
 #player #time_bar {
   width: 350px;
-  height: 6px;
   border: 1px solid #999;
 }
 #player #time_bar div{
