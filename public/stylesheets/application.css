@@ -224,7 +224,7 @@ li.playing {
   margin: 0 10px;
 }
 .album .votes ul {
-  position: relative;
+  position: absolute;
   right: 0px;
   top: 0px;
   width: 130px;
