@@ -5,5 +5,5 @@
     =h @album.name
 
   - form_for(@comment, :url => album_comments_path(@album), :html => {:method => :post}) do |f|
-    = f.text_field :body
+    = f.text_area :body
     = f.submit "Send"

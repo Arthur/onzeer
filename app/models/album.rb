@@ -81,6 +81,10 @@ class Album
     @haters ||= votes.select{|v| v.note < 0}.map(&:author)
   end
 
+  def remove_vote_of(user)
+    votes.delete_if{|v| v.author_id == user.id}
+  end
+
   def musicbrainz_query
     {
       :query=>"#{name} AND artist:\"#{artist}\"",

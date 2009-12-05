@@ -7,6 +7,7 @@
     =h @album.name
 
   .tracks.playable
+    %h3= pluralize(@album.tracks.length, "morceau", "morceaux")
     %ul
       = render :partial => "tracks/track", :collection => @album.tracks
 

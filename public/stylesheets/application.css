@@ -6,7 +6,7 @@ ul li { list-style-type: none; }
 
 #content { margin: 3em 0;}
 
-.tracks.playable,
+div.album,
 #player,
 #browser {
   width: 80%;
@@ -151,8 +151,18 @@ li.playing {
 #browser .tracks .album_info .artist { top: 1em;}
 #browser .tracks .album_info .album { top: 2.2em;}
 
-.tracks ul { width: 100%;}
-.tracks ul li { height: 1.2em; width: 100%; border-top: 1px solid #999;}
+.tracks ul {
+  width: 100%;
+  background-color: #bbb;
+  border: 1px solid #fff;
+  -webkit-border-radius: 5px; 
+}
+.tracks ul li {
+  position: relative;
+  height: 1.2em; width: 100%;
+}
+.tracks ul li:nth-of-type(2n) { background-color: #ccc;}
+.tracks ul li:nth-of-type(n+2) { border-top: 1px solid #999;}
 .tracks ul li > p { position: absolute;}
 .tracks ul li > span { position: absolute; display: block;}
 
@@ -175,8 +185,104 @@ li.playing {
 .tracks ul li .edit { display:none;}
 .tracks ul li:hover .edit { display:block; right: 4em;}
 
+.tracks.minimized ul {display:none;}
+
+/* comments */
+.comments.minimized ul {display:none;}
+.comments .body {
+  background-color: #ccc;
+  border: 1px solid #fff;
+  -webkit-border-radius: 25px;
+  -webkit-box-shadow: #aaa 0px 2px 5px;;
+  padding: 10px;
+  margin-bottom: 25px;
+}
+
+.comments li { position: relative; }
+.comments .author {
+  position: absolute; right: 5px; bottom: -15px;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.comments .edit   { position: absolute; right: 0px; top: 0px; display: none;}
+.comments li:hover .edit { display: block;}
+
+.comments form textarea {
+  width: 100%; height: 7em;
+}
+
+/* votes */
+.album .votes {
+  position: absolute;
+  right: 10px;
+  width: 160px;
+  color: #fff;
+}
+.album .votes ul {
+  width: 130px;
+  height: 16px;
+  border: 2px solid transparent;
+  text-align: center;
+  -webkit-border-radius: 25px;
+}
+.album .votes.empty ul {
+  background-color: #aaa;
+  border: 2px solid #fff;
+  -webkit-box-shadow: rgb(0, 0, 0) 0px 2px 5px;
+}
+
+.album .votes li {
+  border: 2px solid #fff;
+  height: 15px;
+  -webkit-box-shadow: rgb(0, 0, 0) 0px 2px 5px;
+  position: absolute;
+  top: 0px;
+}
+.album .votes .destroy,
+.album .votes.empty li {
+  margin: 3px;
+  height: 10px;
+  font-size: 12px;
+  line-height: 8px;
+  width: 15px;
+  -webkit-border-radius: 25px;
+  -webkit-box-shadow: none;
+}
+
+.album .votes h4, .album .votes form, .album .votes li ul { display: none;}
+
+.album .votes .destroy h4,
+.album .votes.empty h4 { display: inline; }
+
+.album .lovers {
+  right: 26px;
+  background-color: green;
+  -webkit-border-top-right-radius: 25px;
+  -webkit-border-bottom-right-radius: 25px;
+}
+.album .haters {
+  left: 0px;
+  background-color: red;
+  -webkit-border-top-left-radius: 25px;
+  -webkit-border-bottom-left-radius: 25px;
+}
+.album .votes li.destroy {
+  right: 0px;
+  background-color: #aaa;
+}
+
+/* albums list */
+.albums li .cover { float: left; }
+.albums li {
+  float: left;
+  height: 60px;
+  width: 200px;
+  overflow: hidden;
+}
+
 #player,
-.tracks.playable {
+div.album {
   padding: 1em;
   margin: 1em 3em 2em;
   background-color: #E8E8E8;
@@ -190,19 +296,16 @@ li.playing {
   -webkit-border-bottom-right-radius: 0;
 }
 
-.tracks.playable { 
+div.album { 
   margin-top: 0;
   -webkit-border-top-left-radius: 0;
   -webkit-border-top-right-radius: 0;
 }
 
-.albums li {
-  height: 45px;
+li.album {
   position: relative;
   list-style-type: none;
 }
-.albums li .cover { float: left; }
-
 
 /* albums_group : 10 albums in one line, and details by line on hover */
 .albums_group {

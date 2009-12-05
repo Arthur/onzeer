@@ -1,10 +1,10 @@
 .comments
-  %h3 Commentaires
+  %h3= pluralize(@album.comments.length, "commentaire")
   %ul.comments
     - @album.comments.each do |comment|
       %li
         %p.body
-          =h(comment.body)
+          =h(comment.body).gsub("\n","<br />\n")
         %p.author
           =h(comment.author.nickname)
         / %p.date
@@ -12,5 +12,5 @@
         - if comment.author == current_user
           %p.edit
             = link_to "edit", edit_album_comment_path(@album, comment)
-  .new
-    = link_to "add a comment", new_album_comment_path(@album)
+    %li.new
+      = link_to "add a comment", new_album_comment_path(@album)

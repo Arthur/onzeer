@@ -40,6 +40,12 @@ class AlbumsController < ApplicationController
     like_or_hate_response
   end
 
+  def destroy_vote
+    album.remove_vote_of(current_user)
+    album.save
+    like_or_hate_response
+  end
+
   protected
   def like_or_hate_response
     respond_to do |format|

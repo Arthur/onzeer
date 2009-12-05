@@ -157,7 +157,7 @@ function player_div() {
   return player;
 }
 
-$(function() { 
+$(document).ready(function() { 
   var player = player_div();
 
   if ($('.tracks.playable').length > 0) {
@@ -212,7 +212,7 @@ $(function() {
   $('#player .next').click(playNext);
   $('#player .play_pause').click(togglePlayPause);
 
-  $('.home .cover_album').click(function (e) {
+  $('.cover_album').click(function (e) {
     console.log([e, this])
     var target = $(this);
     var url = target.find('a').attr('href')
@@ -223,7 +223,7 @@ $(function() {
   });
 
   $(document).keypress(function (e) {
-    if (e.target.tagName == "INPUT") { return ;}
+    if (e.target.tagName == "INPUT" || e.target.tagName == "TEXTAREA") { return ;}
     if (e.which == 32 || (65 <= e.which && e.which <= 65 + 25) || (97 <= e.which && e.which <= 97 + 25)) {
       if ( ' ' == String.fromCharCode(e.which) ) { togglePlayPause(); return false; }
       if ( 'p' == String.fromCharCode(e.which) ) { playPrev(); }
@@ -231,11 +231,37 @@ $(function() {
     }
   });
 
+  // Show / hide info
+
+  $('.album .tracks').addClass('minimized');
+  $('.album .tracks h3').click(function() { $('.album .tracks').toggleClass('minimized'); });
+
+  $('.album .comments').addClass('minimized');
+  $('.album .comments h3').live('click', function() { $('.album .comments').toggleClass('minimized'); });
+
   // Ajax for voting
-  $('.album .votes input[type="submit"]').live('click', function(event) {
-    var form = $(this).parents('form');
+  function display_votes() {
+    var lovers_count = parseInt($('.album .votes .lovers').text(), 10);
+    var haters_count = parseInt($('.album .votes .haters').text(), 10);
+    var total = lovers_count + haters_count;
+    console.log(lovers_count, haters_count)
+    if (total > 0) {
+      $('.album .votes').removeClass('empty');
+      $('.album .votes .lovers').css('width', 10+lovers_count*100/total + 'px');
+      $('.album .votes .haters').css('width', 10+haters_count*100/total + 'px');
+    } else {
+      $('.album .votes').addClass('empty');
+      $('.album .votes .lovers h4').text('+');
+      $('.album .votes .haters h4').text('-');
+    }
+  }
+  display_votes();
+  $('.album .votes li').live('click', function(event) {
+    var form = $(this).find('form');
     $.post(form.attr('action'), form.serialize(), function (data) {
+      console.log(data);
       $('.votes').replaceWith(data);
+      display_votes();
     });
     return false;
   });
@@ -253,7 +279,8 @@ $(function() {
   $('.album .comments .new a').live('click', function(event) {
     var a = $(this);
     $.get(a.attr('href'), function (data) {
-      a.parent('div').html($('.album form', data).get(0));
+      console.log($('.album form', data).get(0))
+      a.parent('li').html($('.album form', data).get(0));
       $('.album form input[type="text"]').focus();
     });
     return false;
