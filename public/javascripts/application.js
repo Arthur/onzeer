@@ -244,7 +244,6 @@ $(document).ready(function() {
     var lovers_count = parseInt($('.album .votes .lovers').text(), 10);
     var haters_count = parseInt($('.album .votes .haters').text(), 10);
     var total = lovers_count + haters_count;
-    console.log(lovers_count, haters_count)
     if (total > 0) {
       $('.album .votes').removeClass('empty');
       $('.album .votes .lovers').css('width', 10+lovers_count*100/total + 'px');

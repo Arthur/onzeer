@@ -1,28 +1,38 @@
 .votes
-
+  - title_parts = []
+  - title_parts << pluralize(@album.lovers.length, 'personne')+ " pour" if @album.lovers.length > 0
+  - title_parts << pluralize(@album.haters.length, 'personne')+ " contre" if @album.haters.length > 0
+  - title = title_parts.empty? ? "aucun vote." : title_parts.join(', ')+'.'
+  %h3{:title => title}
+    = pluralize(@album.lovers.length + @album.haters.length, 'vote')
   %ul
-    %li.lovers
+    - in_it = @album.lovers.include?(current_user)
+    %li.lovers{:class => in_it && "me", :title => in_it ? "me retirer des pour" : "m'ajouter aux pour"}
       %h4= pluralize(@album.lovers.length, "fan")
       %ul
         - @album.lovers.each do |account|
           %li
             =h(account.nickname)
-        - unless @album.lovers.include?(current_user)
+        - if in_it
+          %li.remove_me
+            - form_for :vote, :url => destroy_vote_album_path(@album), :html => {:method => :delete} do |f|
+              = f.submit "remove my vote"
+        - else
           %li.me
             - form_for :vote, :url => like_album_path(@album) do |f|
               = f.submit "I like it !"
-    %li.haters
+    - in_it = @album.haters.include?(current_user)
+    %li.haters{:class => in_it && "me", :title => in_it ? "me retirer des contre" : "m'ajouter aux contre"}
       %h4= pluralize(@album.haters.length, "anti")
       %ul
         - @album.haters.each do |account|
           %li
             = h(account.nickname)
-        - unless @album.haters.include?(current_user)
+        - if in_it
+          %li.remove_me
+            - form_for :vote, :url => destroy_vote_album_path(@album), :html => {:method => :delete} do |f|
+              = f.submit "remove my vote"
+        - else
           %li.me
             - form_for :vote, :url => hate_album_path(@album) do |f|
               = f.submit "I hate it !"
-
-    %li.destroy
-      %h4 x
-      - form_for :vote, :url => destroy_vote_album_path(@album), :html => {:method => :delete} do |f|
-        = f.submit "remove my vote"

@@ -215,33 +215,43 @@ li.playing {
 /* votes */
 .album .votes {
   position: absolute;
-  right: 10px;
-  width: 160px;
-  color: #fff;
+  right: 0;
+}
+.album .votes h3 {
+  position: relative;
+  right: 150px;
+  top: 0px;
+  margin: 0 10px;
 }
 .album .votes ul {
+  position: relative;
+  right: 0px;
+  top: 0px;
   width: 130px;
   height: 16px;
-  border: 2px solid transparent;
+  border: 0px solid transparent;
+  margin-right: 7px;
   text-align: center;
   -webkit-border-radius: 25px;
+  color: #fff;
 }
 .album .votes.empty ul {
   background-color: #aaa;
   border: 2px solid #fff;
+  margin-right: 5px;
   -webkit-box-shadow: rgb(0, 0, 0) 0px 2px 5px;
 }
 
 .album .votes li {
   border: 2px solid #fff;
-  height: 15px;
+  height: 16px;
   -webkit-box-shadow: rgb(0, 0, 0) 0px 2px 5px;
   position: absolute;
   top: 0px;
 }
-.album .votes .destroy,
+
 .album .votes.empty li {
-  margin: 3px;
+  margin: 1px;
   height: 10px;
   font-size: 12px;
   line-height: 8px;
@@ -252,25 +262,25 @@ li.playing {
 
 .album .votes h4, .album .votes form, .album .votes li ul { display: none;}
 
-.album .votes .destroy h4,
 .album .votes.empty h4 { display: inline; }
 
 .album .lovers {
-  right: 26px;
-  background-color: green;
+  right: 0px;
+  background-color: #0B0;
   -webkit-border-top-right-radius: 25px;
   -webkit-border-bottom-right-radius: 25px;
 }
+.album .lovers:hover { background-color: #0f0; }
+.album .lovers.me:hover { background-color: #0a0; }
+
 .album .haters {
   left: 0px;
-  background-color: red;
+  background-color: #B00;
   -webkit-border-top-left-radius: 25px;
   -webkit-border-bottom-left-radius: 25px;
 }
-.album .votes li.destroy {
-  right: 0px;
-  background-color: #aaa;
-}
+.album .haters:hover { background-color: #f00; }
+.album .haters.me:hover { background-color: #a00; }
 
 /* albums list */
 .albums li .cover { float: left; }
