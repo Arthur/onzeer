@@ -248,6 +248,7 @@ li.playing {
   -webkit-box-shadow: rgb(0, 0, 0) 0px 2px 5px;
   position: absolute;
   top: 0px;
+  cursor: pointer;
 }
 
 .album .votes.empty li {
@@ -271,16 +272,16 @@ li.playing {
   -webkit-border-bottom-right-radius: 25px;
 }
 .album .lovers:hover { background-color: #0f0; }
-.album .lovers.me:hover { background-color: #0a0; }
+.album .lovers.me:hover { background-color: #040; }
 
 .album .haters {
   left: 0px;
-  background-color: #B00;
+  background-color: #d00;
   -webkit-border-top-left-radius: 25px;
   -webkit-border-bottom-left-radius: 25px;
 }
 .album .haters:hover { background-color: #f00; }
-.album .haters.me:hover { background-color: #a00; }
+.album .haters.me:hover { background-color: #600; }
 
 /* albums list */
 .albums li .cover { float: left; }
