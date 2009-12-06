@@ -1,5 +1,5 @@
 class TracksController < ApplicationController
-  skip_before_filter [:verify_authenticity_token, :login_required], :only => [:create]
+  skip_before_filter [:verify_authenticity_token, :login_required], :only => [:create, :wanted]
 
   def index
     respond_to do |format|
@@ -20,11 +20,19 @@ class TracksController < ApplicationController
     @track = Track.new(params[:track])
     @track.user_id = current_user.id if current_user
     if @track.save
-      redirect_to tracks_path(:mine => true)
+      if params[:qt_uploader]
+        render :text => "Ok thanks."
+      else
+        redirect_to tracks_path(:mine => true)
+      end
     else
       logger.info(["could not save track: ", @track.errors, @track.content_type, @track.track_info.to_hash].inspect)
-      flash[:error] = "<pre>" + ["could not save track: ", "errors: ", @track.errors.errors, "content_type:", @track.content_type, "tags:", @track.track_info.to_hash].map(&:inspect).join('<br/>') + "</pre>"
-      render :new
+      if params[:qt_uploader]
+        render :text => "Sorry : #{@track.errors.errors.inspect}"
+      else
+        flash[:error] = "<pre>" + ["could not save track: ", "errors: ", @track.errors.errors, "content_type:", @track.content_type, "tags:", @track.track_info.to_hash].map(&:inspect).join('<br/>') + "</pre>"
+        render :new
+      end
     end
   end
 
@@ -49,6 +57,13 @@ class TracksController < ApplicationController
     if TrackListening.create(:user_id => current_user.id, :track_id => params[:id])
       head :ok
     end
+  end
+
+  def wanted
+    responses = ["Ok, I want it !", "AllreadyHave", "No thanks"]
+    response = responses[rand(3)]
+    logger.debug response
+    render :text => "Ok, I want it !"
   end
 
   protected
