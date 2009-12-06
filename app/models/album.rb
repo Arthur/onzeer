@@ -63,8 +63,10 @@ class Album
   end
 
   def loved_by(user)
+    UserVote.delete_all(:album_id => id, :author_id => user.id)
     votes.delete_if{|v| v.author_id == user.id}
     votes << Vote.new(:note => 1, :author => user)
+    UserVote.create(:album_id => id, :author_id => user.id, :note => 1)
   end
 
   def lovers
@@ -72,9 +74,10 @@ class Album
   end
 
   def hated_by(user)
+    UserVote.delete_all(:album_id => id, :author_id => user.id)
     votes.delete_if{|v| v.author_id == user.id}
     votes << Vote.new(:note => -1, :author => user)
-    RAILS_DEFAULT_LOGGER.debug ["hated_by", user, votes].inspect
+    UserVote.create(:album_id => id, :author_id => user.id, :note => -1)
   end
 
   def haters
@@ -82,6 +85,7 @@ class Album
   end
 
   def remove_vote_of(user)
+    UserVote.delete_all(:album_id => id, :author_id => user.id)
     votes.delete_if{|v| v.author_id == user.id}
   end
 
