@@ -17,6 +17,11 @@ class Album
   many :votes
   many :comments
 
+  def self.find_randomly(number = 10)
+    count = self.count
+    (0...number).map{ first(:offset => rand(count))}
+  end
+
   def tracks
     return @tracks if @tracks
     @tracks = Track.find(:all, :conditions => {:_id => track_ids}, :order => 'nb')
