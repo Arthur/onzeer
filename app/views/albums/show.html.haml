@@ -9,9 +9,9 @@
   .tracks.playable
     %h3= pluralize(@album.tracks.length, "morceau", "morceaux")
     %ul
-      = render :partial => "tracks/track", :collection => @album.tracks
+      = render :partial => "tracks/track.html", :collection => @album.tracks
 
-  = javascript_tag "var tracks = #{@album.tracks.to_json};"
+  = javascript_tag "tracks = #{@album.tracks.to_json};"
 
   - if current_user.admin?
     %p.edit
@@ -26,6 +26,6 @@
       %li.amazon{:class => "asin_#{@album.amazon_asin}"}
         = link_to "Amazon", "http://www.amazon.fr/gp/product/#{@album.amazon_asin}"
 
-  = render :partial => "votes"
+  = render :partial => "votes.html"
 
-  = render :partial => "comments"
+  = render :partial => "comments.html"

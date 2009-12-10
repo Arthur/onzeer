@@ -2,6 +2,7 @@ var covers_path = "cover_files";
 var tracks_path = "audio_files";
 var database = null;
 var r = null;
+var tracks = null;
 
 var will_play_id = null;
 var playing_track_id = null;
@@ -157,7 +158,7 @@ function player_div() {
   return player;
 }
 
-$(document).ready(function() { 
+function setupPlayer(tracks) {
   var player = player_div();
 
   if ($('.tracks.playable').length > 0) {
@@ -212,24 +213,6 @@ $(document).ready(function() {
   $('#player .next').click(playNext);
   $('#player .play_pause').click(togglePlayPause);
 
-  $('.cover_album').click(function (e) {
-    console.log([e, this])
-    var target = $(this);
-    var url = target.find('a').attr('href')
-    // window.location = url;
-    window.open(url);
-    // window.open(url,'player', 'menubar=no, status=no, scrollbars=no, menubar=no');
-    e.stopPropagation();
-  });
-
-  $(document).keypress(function (e) {
-    if (e.target.tagName == "INPUT" || e.target.tagName == "TEXTAREA") { return ;}
-    if (e.which == 32 || (65 <= e.which && e.which <= 65 + 25) || (97 <= e.which && e.which <= 97 + 25)) {
-      if ( ' ' == String.fromCharCode(e.which) ) { togglePlayPause(); return false; }
-      if ( 'p' == String.fromCharCode(e.which) ) { playPrev(); }
-      if ( 'n' == String.fromCharCode(e.which) ) { playNext(); }
-    }
-  });
 
   // Show / hide info
 
@@ -293,7 +276,36 @@ $(document).ready(function() {
     return false;
   });
 
+}
+
+$(document).ready(function() {
+  if (tracks) {
+    setupPlayer(tracks);
+  }
+
+  $('.cover_album').live('click', function (e) {
+    var target = $(this);
+    var url = target.find('a').attr('href') + '.json';
+    $.getJSON(url, function(json) {
+      $('#player').remove();
+      $('.album').remove();
+      $('body').prepend(json.view);
+      setupPlayer(json.tracks);
+    });
+    e.stopPropagation();
+  });
+
+  $(document).keypress(function (e) {
+    if (e.target.tagName == "INPUT" || e.target.tagName == "TEXTAREA") { return ;}
+    if (e.which == 32 || (65 <= e.which && e.which <= 65 + 25) || (97 <= e.which && e.which <= 97 + 25)) {
+      if ( ' ' == String.fromCharCode(e.which) ) { togglePlayPause(); return false; }
+      if ( 'p' == String.fromCharCode(e.which) ) { playPrev(); }
+      if ( 'n' == String.fromCharCode(e.which) ) { playNext(); }
+    }
+  });
+
 });
+
 
 jQuery.ajaxSetup({ 
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")} 
