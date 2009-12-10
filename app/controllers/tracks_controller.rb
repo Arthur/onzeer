@@ -68,6 +68,6 @@ class TracksController < ApplicationController
 
   protected
   def authorized?
-    ["index", "show", "new", "create"].include?(action_name) || current_user.admin?
+    ["index", "show", "new", "create", "just_listened"].include?(action_name) || current_user.admin?
   end
 end
