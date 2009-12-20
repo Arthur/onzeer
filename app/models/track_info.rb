@@ -53,6 +53,10 @@ class TrackInfo
     end
     if mp3?
       Mp3Info.open(filename) do |mp3|
+        cover = mp3.tag2["PIC"] || mp3.tag2["APIC"]
+        # cover.sub!(/\000(PNG|JPG).\000/,"") if mp3.tag2['PIC']
+        cover = cover[6..-1] if mp3.tag2['PIC'] && cover[0] == 0 && (cover[1..3] == "PNG" || cover[1..3] == "JPG") && cover[5] == 0
+        cover.sub!(/\000image\/(jpg|jpeg|png)\000(\000|\003)\000/,"") if mp3.tag2['APIC']
         @hash = {
           :album => mp3.tag.album,
           :artist => mp3.tag.artist,
@@ -61,7 +65,7 @@ class TrackInfo
           :date => mp3.tag.year,
           :bitrate => mp3.bitrate,
           :seconds => mp3.length,
-          :cover => mp3.tag2["PIC"],
+          :cover => cover,
           :extension => :mp3,
         }
       end
