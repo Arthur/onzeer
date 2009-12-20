@@ -152,4 +152,14 @@ class Track
     end
   end
 
+  def self.want(attributes)
+    required_attributes = %w(TrackNumber Name Artist Album)
+    missing_attributes = required_attributes.select{|a| attributes[a].blank?}
+    return "No, please assign this attributes before : #{missing_attributes.join(', ')}" unless missing_attributes.empty?
+    conditions = {:artist => attributes["Artist"], :album_name => attributes["Album"], :nb => attributes["TrackNumber"].to_i}
+    RAILS_DEFAULT_LOGGER.debug conditions.inspect
+    return "We already have it" if Track.find(:first, :conditions => conditions)
+    return "Ok, I want it !"
+  end
+
 end

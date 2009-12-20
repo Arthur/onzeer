@@ -60,10 +60,9 @@ class TracksController < ApplicationController
   end
 
   def wanted
-    responses = ["Ok, I want it !", "AllreadyHave", "No thanks"]
-    response = responses[rand(3)]
-    logger.debug response
-    render :text => "Ok, I want it !"
+    response = Track.want(params[:track])
+    logger.info("response: #{response}")
+    render :text => response
   end
 
   protected
