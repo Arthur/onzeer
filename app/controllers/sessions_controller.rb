@@ -2,6 +2,7 @@ require 'openid/store/memcache'
 require 'openid/extensions/ax'
 require 'openid/extensions/sreg'
 
+
 class SessionsController < ApplicationController
   skip_before_filter :login_required
 
@@ -63,7 +64,7 @@ class SessionsController < ApplicationController
     end
     if email
       self.current_user = User.find_or_create_by_email(email)
-      redirect_to root_path
+      redirect_to session[:return_to] || root_path
     else
       redirect_to new_session_path
     end

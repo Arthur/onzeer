@@ -1,5 +1,5 @@
 class TracksController < ApplicationController
-  skip_before_filter [:verify_authenticity_token, :login_required], :only => [:create, :wanted]
+  skip_before_filter [:verify_authenticity_token], :only => [:create, :wanted]
 
   def index
     respond_to do |format|
@@ -68,6 +68,6 @@ class TracksController < ApplicationController
 
   protected
   def authorized?
-    ["index", "show", "new", "create", "just_listened"].include?(action_name) || current_user.admin?
+    ["index", "show", "new", "create", "just_listened", "wanted"].include?(action_name) || current_user.admin?
   end
 end
