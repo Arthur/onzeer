@@ -5,8 +5,13 @@ class MusicBrainzRelease
 
   def self.find_all_by_title_and_artist(title, artist)
     result = MusicBrainzRelease.get('http://musicbrainz.org/ws/1/release/', :query => {:query => "#{title} AND artist:#{artist}", :type => "xml"})
-    return [*result["metadata"]["release_list"]["release"]] if result["metadata"] && result["metadata"]["release_list"]
-    []
+    if result["metadata"] && result["metadata"]["release_list"]
+      result = result["metadata"]["release_list"]["release"] if result["metadata"] && result["metadata"]["release_list"]
+    else
+      result = []
+    end
+    result = [result] unless result.is_a?(Array)
+    result
   end
 
 end
