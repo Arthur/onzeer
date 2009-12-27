@@ -21,7 +21,10 @@
     - if !@album.musicbrainz_release_id.blank?
       %li.musicbrainz
         = link_to "MusicBrainz.org", "http://musicbrainz.org/release/#{@album.musicbrainz_release_id}.html"
-  
+    - elsif current_user.admin?
+      %li.musicbrainz.find
+        = link_to "Find MusicBrainz Releases", mb_releases_album_path(@album)
+
     - if !@album.amazon_asin.blank?
       %li.amazon{:class => "asin_#{@album.amazon_asin}"}
         = link_to "Amazon", "http://www.amazon.fr/gp/product/#{@album.amazon_asin}"

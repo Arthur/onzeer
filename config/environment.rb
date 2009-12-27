@@ -16,6 +16,7 @@ Rails::Initializer.run do |config|
   config.gem "ruby-openid", :lib => "openid"
   config.gem "jnunemaker-mongomapper", :lib => "mongomapper", :source => "http://gems.github.com"
   config.gem "haml"
+  config.gem "httparty"
 
   config.cache_store = :mem_cache_store
 

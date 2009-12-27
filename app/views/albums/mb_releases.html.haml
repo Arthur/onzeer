@@ -1,0 +1,16 @@
+- @releases.each do |release|
+  .release
+    %p.artist= release["artist"]["name"]
+    %p.title= release["title"]
+    %p.tracks_count= pluralize(release["track_list"]["count"], "track")
+    - if release["asin"]
+      %p.amazon_cover= cover_from_amazon_asin(release["asin"])
+
+    - form_for(@album) do |f|
+      - @album.amazon_asin = release["asin"]
+      - @album.musicbrainz_release_id = release["id"]
+      = f.hidden_field :amazon_asin
+      = f.hidden_field :musicbrainz_release_id
+      = submit_tag "save"
+
+= "No results found" if @releases.empty?

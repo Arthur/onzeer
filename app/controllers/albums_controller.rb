@@ -32,6 +32,10 @@ class AlbumsController < ApplicationController
     end
   end
 
+  def mb_releases
+    @releases = MusicBrainzRelease.find_all_by_title_and_artist(album.name, album.artist)
+  end
+
   def like
     album.loved_by(current_user)
     album.save
