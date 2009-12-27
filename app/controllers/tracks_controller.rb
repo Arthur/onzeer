@@ -1,5 +1,5 @@
 class TracksController < ApplicationController
-  skip_before_filter [:verify_authenticity_token, :login_required], :only => [:create, :wanted]
+  skip_before_filter [:verify_authenticity_token], :only => [:create, :wanted]
 
   def index
     respond_to do |format|
@@ -60,14 +60,13 @@ class TracksController < ApplicationController
   end
 
   def wanted
-    responses = ["Ok, I want it !", "AllreadyHave", "No thanks"]
-    response = responses[rand(3)]
-    logger.debug response
-    render :text => "Ok, I want it !"
+    response = Track.want(params[:track])
+    logger.info("response: #{response}")
+    render :text => response
   end
 
   protected
   def authorized?
-    ["index", "show", "new", "create", "just_listened"].include?(action_name) || current_user.admin?
+    ["index", "show", "new", "create", "just_listened", "wanted"].include?(action_name) || current_user.admin?
   end
 end

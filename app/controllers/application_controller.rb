@@ -19,7 +19,14 @@ class ApplicationController < ActionController::Base
   def login_required
     unless current_user && authorized?
       respond_to do |f|
-        f.html { redirect_to current_user ? root_path : new_session_path }
+        f.html do
+          if current_user
+            redirect_to root_path
+          else
+            session[:return_to] = request.url
+            redirect_to new_session_path
+          end
+        end
         f.all { head :unauthorized }
       end
     end
@@ -41,7 +48,8 @@ class ApplicationController < ActionController::Base
 
   def current_user
     return @current_user unless @current_user.nil?
-    @current_user = session[:user_id] && User.find(session[:user_id]) rescue nil
+    @current_user ||= session[:user_id] && User.find(session[:user_id]) rescue nil
+    @current_user ||= params[:token] && User.find(Rails.cache.fetch(params[:token])) rescue nil
     @current_user ||= false
   end
   helper_method :current_user
