@@ -7,7 +7,7 @@ class AlbumsController < ApplicationController
       # see http://www.mongodb.org/display/DOCS/OR+operations+in+query+expressions
       conditions = { "$where" => "this.name.match(/#{q}/i) || this.artist.match(/#{q}/i)" }
     end
-    @albums = Album.paginate(:order => 'artist, name', :per_page => 50, :conditions => conditions, :page => params[:page])
+    @albums = Album.paginate(:order => 'artist, name', :per_page => params[:limit] || 50, :conditions => conditions, :page => params[:page])
   end
 
   def show
