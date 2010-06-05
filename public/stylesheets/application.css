@@ -337,31 +337,44 @@ li.album {
   width: 40px; margin: 2px;
   border: 1px solid #999;
 }
+.albums_group li .in_first_line { position: relative; }
+.albums_group li .pointer {
+  position : absolute;
+  width: 40px;
+  text-align: center;
+}
+.albums_group li:first .pointer { text-align: right; }
+.albums_group li:last .pointer { text-align: left; }
+
 /* show details only on hover */
-.albums_group ul li .cover_album > div { display:none; }
-
-.albums_group ul:hover {
-  height: auto;
-  z-index: 999; /* other albums_group stay behind us */
-}
-
-.albums_group ul:hover li {
-  float: none; /*no more floating*/
-  position: relative; /*child in absolute*/
-  width: 100%;
-}
+.albums_group li .cover_album .pointer,
+.albums_group li .cover_album .info { display:none; }
 
 .albums_group ul:hover li:hover {  /*to show that there are clickable*/
   cursor: pointer;
   background-color: #bbb;
 }
 /* details displaying */
-.albums_group ul:hover li .cover_album > div { display:block; }
-.albums_group ul:hover li .cover_album span,
-.albums_group ul:hover li .cover_album a {
-  display:block;
+.albums_group li:hover .pointer { display: block; }
+.albums_group li:hover .info {
+  display: block;
   position: absolute;
-  left: 50px;
+  top: 60px;
+  left: 0px;
+  padding: 0.5em 20px;
+  margin: 0 10px;
+  width: 390px;
+  background-color: #fff;
+  border: 2px solid #000;
+  -webkit-border-radius: 1em;
+  -webkit-box-shadow: #aaa 0px 2px 5px;;
+  z-index: 999;
+}
+.albums_group ul li:hover .cover_album .pointer { display:bloc; }
+
+.albums_group li .cover_album span,
+.albums_group li .cover_album a {
+  display:block;
 }
 .albums_group li a { text-decoration: none; color: black;}
 .albums_group ul:hover li .cover_album span { top: 0.1em; }
