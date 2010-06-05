@@ -2,16 +2,16 @@
 module ApplicationHelper
 
   def cover_from_amazon_asin(asin, size=40)
-    content_tag(:img, nil, :src => "http://ec1.images-amazon.com/images/P/#{asin}.01.MZZZZZZZ.jpg", :height => size, :width => size)
+    tag(:img, :src => "http://ec1.images-amazon.com/images/P/#{asin}.01.MZZZZZZZ.jpg", :height => size, :width => size)
   end
 
   def cover_img_tag(record_with_cover, size=40)
     if record_with_cover.amazon_asin
       cover_from_amazon_asin(record_with_cover.amazon_asin, size)
     elsif record_with_cover.cover
-      content_tag(:img, nil, :src => record_with_cover.public_cover_path, :height => size)
+      tag(:img, :src => record_with_cover.public_cover_path, :height => size)
     else
-      content_tag(:img, nil, :src => 'images/unknow_cover.png', :height => size)
+      tag(:img, :src => 'images/unknow_cover.png', :height => size)
     end
   end
 
