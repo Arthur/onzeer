@@ -1,0 +1,8 @@
+.last_albums.albums_group
+  %h3 les derniers albums importés:
+  %ul.links
+    %li= "«"
+    %li= "»"
+  %ul.albums
+    - @last_albums.each do |album|
+      %li= album_div(album)
