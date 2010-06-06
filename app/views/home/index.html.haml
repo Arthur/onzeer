@@ -1,74 +1,78 @@
 .search
-  %h3
-    Chercher un album
+  Chercher un album
   - form_tag albums_path, :method => :get do
     = text_field_tag :q
     = submit_tag "Rechercher"
   
 
-%p
-  = link_to "liste (très moche) des albums", albums_path
+%p= link_to "liste (très moche) des albums", albums_path
+%p= link_to "ajouter des fichiers", new_track_path
 
-.albums_group.randomly
-  %h3 Albums choisis aléatoirement:
-  %ul.links
-    %li.last= "∞"
-  %ul.albums
-    - Album.find_randomly.each do |album|
-      %li= album_div(album)
+%ul.two_cols
+  %li.left_col
+    .albums_group.randomly
+      %h3 Albums choisis aléatoirement:
+      %ul.links
+        %li.last= "∞"
+      %ul.albums
+        - Album.find_randomly.each do |album|
+          %li= album_div(album)
 
-.last_albums.albums_group
-  %h3 les derniers albums importés:
-  %ul.links
-    %li= "«"
-    %li= "»"
-  %ul.albums
-    - @last_albums.each do |album|
-      %li= album_div(album)
+    .last_albums.albums_group
+      %h3 les derniers albums importés:
+      %ul.links
+        %li= "«"
+        %li= "»"
+      %ul.albums
+        - @last_albums.each do |album|
+          %li= album_div(album)
 
-.preferred_albums
-  %h3
-    Albums préférés:
-  %ul
-    - User.all.each do |user|
-      - albums = user.last_preferred_albums
-      - unless albums.empty?
-        %li
-          .albums_group
-            =h(user.nickname)
-            %ul.albums
-              - albums.each do |album|
-                %li= album_div(album)
+    .preferred_albums
+      %h3
+        Albums préférés:
+      %ul
+        - User.all.each do |user|
+          - albums = user.last_preferred_albums
+          - unless albums.empty?
+            %li
+              .albums_group
+                =h(user.nickname)
+                %ul.albums
+                  - albums.each do |album|
+                    %li= album_div(album)
 
-.last_comments
-  %h3 Les derniers commentaires :
-  %ul
-    - @last_comments.each do |user_comment|
-      %li
-        %p.cover
-          = cover_img_tag(user_comment.album, 20)
-        %p.album_name
-          = user_comment.album && link_to(user_comment.album.name, album_path(user_comment.album))
-        %p.author
-          = user_comment.comment.author.nickname
-        %p.comment
-          = user_comment.comment.body
+  %li.right_col
+    .last_comments.last_thing
+      %h3 derniers commentaires :
+      %ul
+        - @last_comments.each do |user_comment|
+          %li
+            .main_info
+              %p.cover
+                = cover_img_tag(user_comment.album, 20)
+              %p.author
+                = user_comment.comment.author.nickname
+            .more_info
+              %p.album_name
+                = user_comment.album && link_to(user_comment.album.name, album_path(user_comment.album))
+              %p.comment
+                = user_comment.comment.body
 
-.last_listenings
-  %h3 Les derniers morceaux écoutés :
-  %ul
-    - @last_listenings.each do |track_listening|
-      %li
-        %p.cover
-          = cover_img_tag(track_listening.album, 20)
-        %p.album_name
-          = track_listening.album && link_to(track_listening.album.name, album_path(track_listening.album))
-        %p.title
-          = track_listening.track && track_listening.track.title
-        %p.author
-          = track_listening.user && track_listening.user.nickname
+    .last_listenings.last_thing
+      %h3 dernières écoutes :
+      %ul
+        - @last_listenings.each do |track_listening|
+          %li
+            .main_info
+              %p.cover
+                = cover_img_tag(track_listening.album, 20)
+              %p.author
+                = track_listening.user && track_listening.user.nickname
+            .more_info
+              %p.album_name
+                = track_listening.album && link_to(track_listening.album.name, album_path(track_listening.album))
+              %p.title
+                = track_listening.track && track_listening.track.title
 
-
-%p
-  = link_to "ajouter des fichiers", new_track_path
+  %li.clear
 

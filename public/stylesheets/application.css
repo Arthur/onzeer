@@ -318,6 +318,19 @@ li.album {
   list-style-type: none;
 }
 
+.two_cols {
+  width: 800px;
+  margin: 0 auto;
+}
+.two_cols .left_col{
+  float:left;
+  width: 580px;
+}
+
+.two_cols .right_col {
+  float:right;
+  width:200px;
+}
 /* albums_group : 10 albums in one line, details shown on hover */
 
 .albums_group {
@@ -413,13 +426,44 @@ li.album {
 .preferred_albums .albums_group { height: 80px; }
 .preferred_albums .albums_group ul { top: 20px; }
 
-.last_listenings li,
-.last_comments li { position: relative; width: 500px; height: 25px;}
-.last_listenings p,
-.last_comments p { position: absolute; bottom: 5px; height: 20px; overflow-x: hidden; overflow-y: hidden;}
+/* last_thing : last_listenings & last_comments styling */
+.last_thing li { position: relative; width: 200px; height: 25px; border: 1px solid #999;}
+
+.last_thing .main_info {
+  width: 100%;
+  height:100%;
+}
+.last_thing .main_info p { position: absolute; bottom: 1px; height: 22px; overflow-x: hidden; overflow-y: hidden;}
+.last_thing .main_info p.cover { left: 2px; }
+.last_thing .main_info p.author { right: 2px; }
+
+.last_listenings li:hover .main_info,
+.last_comments li:hover .main_info{
+  background-color: #a7c9a8;
+}
+
+.last_listenings .more_info,
+.last_comments .more_info { display:none; }
+.last_listenings li:hover .more_info,
+.last_comments li:hover .more_info { display:block; }
+
 .last_listenings p.album_name,
 .last_comments p.album_name { left: 25px;}
 .last_listenings p.title,
 .last_comments p.comment { left: 225px; width: 225px;}
-.last_listenings p.author,
-.last_comments p.author { left: 450px;}
+
+.last_comments .more_info,
+.last_listenings .more_info {
+  position: absolute;
+  top: -10px;
+  right: 200px;
+  padding: 0.5em 20px;
+  margin: 0 10px;
+  width: 390px;
+  background-color: #fff;
+  border: 2px solid #000;
+  -webkit-border-radius: 1em;
+  -webkit-box-shadow: #aaa 0px 2px 5px;;
+  z-index: 999;
+}
+
