@@ -22,6 +22,10 @@ class Album
     (0...number).map{ first(:offset => rand(count))}.compact
   end
 
+  def self.find_last(page=nil)
+    Album.paginate(:order => 'created_at DESC', :per_page => 10, :page => page)
+  end
+
   def tracks
     return @tracks if @tracks
     @tracks = Track.find(:all, :conditions => {:_id => track_ids}, :order => 'nb')

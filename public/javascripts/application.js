@@ -304,6 +304,14 @@ $(document).ready(function() {
     }
   });
 
+  $('.albums_group .links li').live('click', function(e) {
+    var target = $(this);
+    var url = target.find('a').attr('href');
+    target.parents('.albums_group').load(url);
+    console.log(['hover', e, this, url, target.parents('.albums_group').html()]);
+    e.stopPropagation();
+  });
+
 });
 
 

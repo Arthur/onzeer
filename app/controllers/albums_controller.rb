@@ -7,7 +7,17 @@ class AlbumsController < ApplicationController
       # see http://www.mongodb.org/display/DOCS/OR+operations+in+query+expressions
       conditions = { "$where" => "this.name.match(/#{q}/i) || this.artist.match(/#{q}/i)" }
     end
-    @albums = Album.paginate(:order => 'artist, name', :per_page => params[:limit] || 50, :conditions => conditions, :page => params[:page])
+    if params[:randomly]
+      @albums = Album.find_randomly
+      render :partial => "albums/randomly"
+      return
+    end
+    if params[:last_page]
+      @last_albums = Album.find_last(params[:last_page])
+      render :partial => "albums/last"
+      return
+    end
+    @albums ||= Album.paginate(:order => 'artist, name', :per_page => params[:limit] || 50, :conditions => conditions, :page => params[:page])
   end
 
   def show

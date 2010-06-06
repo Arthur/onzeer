@@ -4,7 +4,7 @@ class HomeController < ApplicationController
   def index
     @last_listenings = TrackListening.find(:all, :order => 'created_at DESC', :limit => 10)
     @last_comments = UserComment.find(:all, :order => 'created_at DESC', :limit => 10)
-    @last_albums = Album.find(:all, :order => 'created_at DESC', :limit => 10)
+    @last_albums = Album.find_last
   end
 
 end
