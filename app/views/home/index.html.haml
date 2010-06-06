@@ -11,17 +11,21 @@
 
 .albums_group.randomly
   %h3 Albums choisis aléatoirement:
-  %ul
+  %ul.links
+    %li.last= "∞"
+  %ul.albums
     - Album.find_randomly.each do |album|
       %li= album_div(album)
 
 .last_albums.albums_group
-  %h3
-    les derniers albums importés:
-  %ul.test
+  %h3 les derniers albums importés:
+  %ul.links
+    %li= "«"
+    %li= "»"
+  %ul.albums
     - @last_albums.each do |album|
-      %li
-        = album_div(album)
+      %li= album_div(album)
+
 .preferred_albums
   %h3
     Albums préférés:
@@ -32,10 +36,9 @@
         %li
           .albums_group
             =h(user.nickname)
-            %ul
+            %ul.albums
               - albums.each do |album|
-                %li
-                  = album_div(album)
+                %li= album_div(album)
 
 .last_comments
   %h3 Les derniers commentaires :

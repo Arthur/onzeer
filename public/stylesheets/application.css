@@ -318,41 +318,72 @@ li.album {
   list-style-type: none;
 }
 
-/* albums_group : 10 albums in one line, and details by line on hover */
+/* albums_group : 10 albums in one line, details shown on hover */
+
 .albums_group {
-  position: relative; /* ul are in absolute in it */
+  position: relative;
   height: 100px;
 }
+/* we specified albums_group height because content are positionned in absolute in it */
 
 .albums_group h3 { height: 20px; }
-.albums_group ul {
-  position: absolute;
-  top: 40px; left: 50px; 
-  height: 46px; width: 460px;
+
+.albums_group .links,
+.albums_group .albums {
+  position:absolute;
+  top: 20px;
+  height: 46px;
+}
+.albums_group .albums {
+  margin: 15px 40px;
+  width: 460px;
   border: 1px solid #999;
   background-color: #DDD;
 }
-.albums_group ul li {
+.albums_group .links {
+  margin: 15px 20px;
+  width: 500px;
+/*  border: 1px solid red;*/
+}
+.albums_group .albums li {
   float: left;
-  width: 40px; margin: 2px;
+  width: 42px; 
+  margin: 2px 1px;
+  padding: 0px 1px;
+  cursor: pointer;
+}
+.albums_group .links li {
+  float:left;
+  width: 20px;
+  height: 46px;
+  cursor: pointer;
+  text-align: center;
+  line-height: 46px;
   border: 1px solid #999;
 }
+.albums_group .links li:last-child { float:right; }
+.albums_group .links li:hover {
+  border-color: #888;
+  background-color: #DDD;
+}
+
+.albums_group .albums li img { border: 1px solid #999; }
 .albums_group li .in_first_line { position: relative; }
-.albums_group li .pointer {
-  position : absolute;
+.albums_group .albums .pointer {
+  position: absolute;
   width: 40px;
   text-align: center;
 }
-.albums_group li:first .pointer { text-align: right; }
-.albums_group li:last .pointer { text-align: left; }
+.albums_group .albums li:last-child .pointer { text-align: left; }
+.albums_group .albums li:first-child .pointer { text-align: right; }
 
 /* show details only on hover */
 .albums_group li .cover_album .pointer,
 .albums_group li .cover_album .info { display:none; }
 
-.albums_group ul:hover li:hover {  /*to show that there are clickable*/
-  cursor: pointer;
-  background-color: #bbb;
+/*to show that there are clickable*/
+.albums_group .albums li:hover img {
+  border-color: #000;
 }
 /* details displaying */
 .albums_group li:hover .pointer { display: block; }
@@ -370,7 +401,6 @@ li.album {
   -webkit-box-shadow: #aaa 0px 2px 5px;;
   z-index: 999;
 }
-.albums_group ul li:hover .cover_album .pointer { display:bloc; }
 
 .albums_group li .cover_album span,
 .albums_group li .cover_album a {
