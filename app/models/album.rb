@@ -19,7 +19,7 @@ class Album
 
   def self.find_randomly(number = 10)
     count = self.count
-    (0...number).map{ first(:offset => rand(count))}
+    (0...number).map{ first(:offset => rand(count))}.compact
   end
 
   def tracks
