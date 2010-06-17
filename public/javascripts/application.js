@@ -49,9 +49,9 @@ function playNow(id, auto) {
 }
 
 function trackEnded() {
-  var just_played_id = will_play_id;
+  var just_played_id = $('.tracks li.playing').attr('id');
   playNext();
-  $.post(prefix + 'tracks/' + just_played_id + '/just_listened');
+  $.post(prefix + 'tracks/' + just_played_id + '/just_listened', {});
 }
 
 function playNext() {
