@@ -467,3 +467,4 @@ li.album {
   z-index: 999;
 }
 
+.users .disabled { text-decoration:line-through; }
