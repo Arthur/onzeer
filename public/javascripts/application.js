@@ -308,8 +308,14 @@ $(document).ready(function() {
     var target = $(this);
     var url = target.find('a').attr('href');
     target.parents('.albums_group').load(url);
-    console.log(['hover', e, this, url, target.parents('.albums_group').html()]);
-    e.stopPropagation();
+  });
+
+  $('.albums_group .links li a').live('click', function(e) {
+    var target = $(this);
+    var url = target.attr('href');
+    console.log(["click", target, url]);
+    target.parents('.albums_group').load(url);
+    e.preventDefault();
   });
 
 });
