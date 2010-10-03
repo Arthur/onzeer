@@ -12,6 +12,8 @@ class Album
   key :amazon_asin, String
   key :musicbrainz_release_id, String
 
+  key :user_id, String # author
+
   timestamps
 
   many :votes

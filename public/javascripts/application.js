@@ -305,11 +305,11 @@ $(document).ready(function() {
     }
   });
 
-  $('.albums_with_pagination .links li, .albums_with_pagination .links li a').live('click', function(e) {
+  $('.albums_group .links li, .albums_group .links li a').live('click', function(e) {
     e.preventDefault();
     var target = $(this);
     var url = target.attr('href') || target.find('a').attr('href');
-    target.parents('.albums_with_pagination').load(url);
+    target.parents('.albums_group').load(url);
   });
 
 });

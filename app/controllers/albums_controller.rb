@@ -13,8 +13,15 @@ class AlbumsController < ApplicationController
       return
     end
     if params[:last]
-      albums = Album.find_last(params[:page])
-      render :partial => "albums/paginated", :locals => {:albums => albums, :page => albums.current_page, :albums_params => {:last => true}}
+      albums_params = {:last => true}
+      if params[:user_id]
+        user = User.find(params[:user_id])
+        albums_params[:user_id] = user.id
+        albums = user.last_uploaded_albums(params[:page])
+      else
+        albums = Album.find_last(params[:page])
+      end
+      render :partial => "albums/paginated", :locals => {:albums => albums, :page => albums.current_page, :albums_params => albums_params}
       return
     end
     if params[:user_id] && params[:preferred]

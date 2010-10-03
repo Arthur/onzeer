@@ -27,4 +27,8 @@ class User
     # .select{|v| v.note > 0}
   end
 
+  def last_uploaded_albums(page = 1)
+    Album.paginate(:order => 'created_at DESC', :conditions => {:user_id => id}, :per_page => 10, :page => page)
+  end
+
 end

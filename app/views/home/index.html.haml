@@ -10,25 +10,29 @@
 
 %ul.two_cols
   %li.left_col
-    .albums_group.randomly
+    .randomly
       %h3 Albums choisis aléatoirement:
-      .albums_with_pagination=render :partial => "albums/randomly"
-    .last_albums.albums_group
+      .albums_group=render :partial => "albums/randomly"
+    .last_albums
       %h3 les derniers albums importés:
-      .albums_with_pagination=render :partial => "albums/paginated", :locals => {:albums => @last_albums, :page => @last_albums.current_page, :albums_params => {:last => true}}
+      .albums_group=render :partial => "albums/paginated", :locals => {:albums => @last_albums, :page => @last_albums.current_page, :albums_params => {:last => true}}
 
     .preferred_albums
       %h3
         Albums préférés:
       %ul
         - User.all.each do |user|
-          - votes = user.last_votes
-          - unless votes.empty?
-            %li
+          %li
+            %p.nickname=h(user.nickname)
+            - votes = user.last_votes
+            - unless votes.empty?
               .albums_group
-                =h(user.nickname)
-                .albums_with_pagination
-                  = render :partial => "albums/paginated", :locals => {:albums => votes.map(&:album), :page => votes.current_page, :albums_params => {:user_id => user.id, :preferred => true}}
+                = render :partial => "albums/paginated", :locals => {:albums => votes.map(&:album), :page => votes.current_page, :albums_params => {:user_id => user.id, :preferred => true}}
+            - last_uploaded = user.last_uploaded_albums
+            - unless last_uploaded.empty?
+              .albums_group
+                = render :partial => "albums/paginated", :locals => {:albums => last_uploaded, :page => last_uploaded.current_page, :albums_params => {:user_id => user.id, :last => true}}
+
   %li.right_col
     .last_comments.last_thing
       %h3 derniers commentaires :

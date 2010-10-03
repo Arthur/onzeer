@@ -59,6 +59,7 @@ class Track
     if album.nil? || album.artist != album_artist || album.name != album_name
       old_album = album
       self.album = Album.find_or_create_by_artist_and_name(album_artist, album_name)
+      album.user_id ||= user_id
       album.add_track(self)
       album.save
       if old_album
