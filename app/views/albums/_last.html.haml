@@ -1,6 +1,0 @@
-%ul.links
-  %li= link_to "«", albums_path(:last_page => @last_albums.current_page - 1)
-  %li= link_to "»", albums_path(:last_page => @last_albums.current_page + 1)
-%ul.albums
-  - @last_albums.each do |album|
-    %li= album_div(album)

@@ -1,0 +1,6 @@
+%ul.links
+  %li= link_to "«", albums_path(albums_params.merge(:page => page - 1))
+  %li= link_to "»", albums_path(albums_params.merge(:page => page + 1))
+%ul.albums
+  - albums.each do |album|
+    %li= album_div(album)
