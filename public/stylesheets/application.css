@@ -65,7 +65,7 @@ div.album,
   width: 500px; left: 200px;
   background-color: #bbb;
   border: 1px solid #fff;
-  -webkit-border-radius: 5px; 
+  -webkit-border-radius: 5px;
 }
 #player .info_box > div { position: absolute; }
 #player .img {
@@ -100,9 +100,9 @@ div.album,
 .album .tracks .album_name { display:none; }
 
 
-#browser > ul { 
+#browser > ul {
   position: absolute;
-  margin: 0; padding: 0; 
+  margin: 0; padding: 0;
   overflow-y: auto;
   border: 2px solid #999;
 }
@@ -155,7 +155,7 @@ li.playing {
   width: 100%;
   background-color: #bbb;
   border: 1px solid #fff;
-  -webkit-border-radius: 5px; 
+  -webkit-border-radius: 5px;
 }
 .tracks ul li {
   position: relative;
@@ -297,17 +297,17 @@ div.album {
   padding: 1em;
   margin: 1em 3em 2em;
   background-color: #E8E8E8;
-  -webkit-border-radius: 1em; 
+  -webkit-border-radius: 1em;
   -webkit-box-shadow: rgb(0, 0, 0) 0px 2px 5px;
 }
 
-#player { 
+#player {
   margin-bottom: 0;
   -webkit-border-bottom-left-radius: 0;
   -webkit-border-bottom-right-radius: 0;
 }
 
-div.album { 
+div.album {
   margin-top: 0;
   -webkit-border-top-left-radius: 0;
   -webkit-border-top-right-radius: 0;
@@ -360,7 +360,7 @@ li.album {
 }
 .albums_group .albums li {
   float: left;
-  width: 42px; 
+  width: 42px;
   margin: 2px 1px;
   padding: 0px 1px;
   cursor: pointer;
