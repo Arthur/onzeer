@@ -21,8 +21,10 @@ class User
     roles.include?("admin")
   end
 
-  def last_preferred_albums
-    UserVote.find_all_by_author_id(id, :order => 'created_at DESC', :limit => 10).select{|v| v.note > 0}.map(&:album_id).uniq.map{|album_id| Album.find(album_id)}
+  def last_votes(page = 1)
+    UserVote.paginate(:order => 'created_at DESC', :conditions => {:author_id => id}, :per_page => 10, :page => page)
+    # FIXME : conditions to have only positive votes
+    # .select{|v| v.note > 0}
   end
 
 end

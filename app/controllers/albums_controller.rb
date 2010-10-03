@@ -17,6 +17,11 @@ class AlbumsController < ApplicationController
       render :partial => "albums/last"
       return
     end
+    if params[:user_id] && params[:preferred]
+      user = User.find(params[:user_id])
+      votes = user.last_votes(params[:page])
+      render :partial => "albums/preferred", :locals => {:albums => votes.map(&:album), :page => votes.current_page, :user => user}
+    end
     @albums ||= Album.paginate(:order => 'artist, name', :per_page => params[:limit] || 50, :conditions => conditions, :page => params[:page])
   end
 

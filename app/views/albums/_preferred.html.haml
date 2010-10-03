@@ -1,0 +1,6 @@
+%ul.links
+  %li= link_to "«", albums_path(:page => page - 1, :user_id => user.id, :preferred => true)
+  %li= link_to "»", albums_path(:page => page + 1, :user_id => user.id, :preferred => true)
+%ul.albums
+  - albums.each do |album|
+    %li= album_div(album)

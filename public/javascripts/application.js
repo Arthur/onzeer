@@ -305,18 +305,11 @@ $(document).ready(function() {
     }
   });
 
-  $('.albums_group .links li').live('click', function(e) {
-    var target = $(this);
-    var url = target.find('a').attr('href');
-    target.parents('.albums_group').load(url);
-  });
-
-  $('.albums_group .links li a').live('click', function(e) {
-    var target = $(this);
-    var url = target.attr('href');
-    console.log(["click", target, url]);
-    target.parents('.albums_group').load(url);
+  $('.albums_with_pagination .links li, .albums_with_pagination .links li a').live('click', function(e) {
     e.preventDefault();
+    var target = $(this);
+    var url = target.attr('href') || target.find('a').attr('href');
+    target.parents('.albums_with_pagination').load(url);
   });
 
 });
