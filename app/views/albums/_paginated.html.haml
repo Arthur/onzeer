@@ -1,6 +1,12 @@
+- paginator ||= albums
 %ul.links
-  %li= link_to "«", albums_path(albums_params.merge(:page => page - 1))
-  %li= link_to "»", albums_path(albums_params.merge(:page => page + 1))
+  %li{:class => "#{"empty" unless paginator.previous_page}"}
+    - if paginator.previous_page
+      = link_to "«", albums_path(albums_params.merge(:page => paginator.previous_page))
+  %li{:class => "#{"empty" unless paginator.next_page}"}
+    - if paginator.next_page
+      = link_to "»", albums_path(albums_params.merge(:page => paginator.next_page))
+
 %ul.albums
   - albums.each do |album|
     %li= album_div(album)

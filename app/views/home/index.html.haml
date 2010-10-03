@@ -15,7 +15,7 @@
       .albums_group=render :partial => "albums/randomly"
     .last_albums
       %h3 les derniers albums importés:
-      .albums_group=render :partial => "albums/paginated", :locals => {:albums => @last_albums, :page => @last_albums.current_page, :albums_params => {:last => true}}
+      .albums_group=render :partial => "albums/paginated", :locals => {:albums => @last_albums, :albums_params => {:last => true}}
 
     .preferred_albums
       %h3
@@ -27,11 +27,11 @@
             - votes = user.last_votes
             - unless votes.empty?
               .albums_group
-                = render :partial => "albums/paginated", :locals => {:albums => votes.map(&:album), :page => votes.current_page, :albums_params => {:user_id => user.id, :preferred => true}}
+                = render :partial => "albums/paginated", :locals => {:albums => votes.map(&:album), :paginator => votes, :albums_params => {:user_id => user.id, :preferred => true}}
             - last_uploaded = user.last_uploaded_albums
             - unless last_uploaded.empty?
               .albums_group
-                = render :partial => "albums/paginated", :locals => {:albums => last_uploaded, :page => last_uploaded.current_page, :albums_params => {:user_id => user.id, :last => true}}
+                = render :partial => "albums/paginated", :locals => {:albums => last_uploaded, :albums_params => {:user_id => user.id, :last => true}}
 
   %li.right_col
     .last_comments.last_thing
