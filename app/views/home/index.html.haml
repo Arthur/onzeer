@@ -17,21 +17,23 @@
       %h3 les derniers albums importés:
       .albums_group=render :partial => "albums/paginated", :locals => {:albums => @last_albums, :albums_params => {:last => true}}
 
-    .preferred_albums
-      %h3
-        Albums préférés:
+    .users
+      %h2 Utilisateurs
       %ul
         - User.all.each do |user|
-          %li
-            %p.nickname=h(user.nickname)
-            - votes = user.last_votes
-            - unless votes.empty?
-              .albums_group
-                = render :partial => "albums/paginated", :locals => {:albums => votes.map(&:album), :paginator => votes, :albums_params => {:user_id => user.id, :preferred => true}}
-            - last_uploaded = user.last_uploaded_albums
-            - unless last_uploaded.empty?
-              .albums_group
-                = render :partial => "albums/paginated", :locals => {:albums => last_uploaded, :albums_params => {:user_id => user.id, :last => true}}
+          - votes = user.last_votes
+          - last_uploaded = user.last_uploaded_albums
+          - unless votes.empty? && last_uploaded_albums.empty?
+            %li
+              %h3.nickname=h(user.nickname)
+              - unless votes.empty?
+                %p= "#{votes.total_entries} album préférés."
+                .albums_group
+                  = render :partial => "albums/paginated", :locals => {:albums => votes.map(&:album), :paginator => votes, :albums_params => {:user_id => user.id, :preferred => true}}
+              - unless last_uploaded.empty?
+                %p= "#{last_uploaded.total_entries} album uploadés."
+                .albums_group
+                  = render :partial => "albums/paginated", :locals => {:albums => last_uploaded, :albums_params => {:user_id => user.id, :last => true}}
 
   %li.right_col
     .last_comments.last_thing
