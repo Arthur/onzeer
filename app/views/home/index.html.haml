@@ -27,11 +27,11 @@
             %li
               %h3.nickname=h(user.nickname)
               - unless votes.empty?
-                %p= "#{votes.total_entries} album préférés."
+                %p= "#{votes.total_entries} albums préférés."
                 .albums_group
                   = render :partial => "albums/paginated", :locals => {:albums => votes.map(&:album), :paginator => votes, :albums_params => {:user_id => user.id, :preferred => true}}
               - unless last_uploaded.empty?
-                %p= "#{last_uploaded.total_entries} album uploadés."
+                %p= "#{last_uploaded.total_entries} albums uploadés."
                 .albums_group
                   = render :partial => "albums/paginated", :locals => {:albums => last_uploaded, :albums_params => {:user_id => user.id, :last => true}}
 
