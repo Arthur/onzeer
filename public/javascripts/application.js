@@ -296,6 +296,7 @@ $(document).ready(function() {
   });
 
   $(document).keypress(function (e) {
+    if (e.altKey || e.ctrlKey || e.metaKey) { return; }
     if (e.target.tagName == "INPUT" || e.target.tagName == "TEXTAREA") { return ;}
     if (e.which == 32 || (65 <= e.which && e.which <= 65 + 25) || (97 <= e.which && e.which <= 97 + 25)) {
       if ( ' ' == String.fromCharCode(e.which) ) { togglePlayPause(); return false; }
