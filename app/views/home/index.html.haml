@@ -23,7 +23,7 @@
         - User.all.each do |user|
           - votes = user.last_votes
           - last_uploaded = user.last_uploaded_albums
-          - unless votes.empty? && last_uploaded_albums.empty?
+          - unless votes.empty? && last_uploaded.empty?
             %li
               %h3.nickname=h(user.nickname)
               - unless votes.empty?
