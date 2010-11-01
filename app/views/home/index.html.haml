@@ -36,6 +36,11 @@
                   = render :partial => "albums/paginated", :locals => {:albums => last_uploaded, :albums_params => {:user_id => user.id, :last => true}}
 
   %li.right_col
+    - if @last_blog_post
+      .last_blog_post
+        %h3 Sur le blog :
+        = link_to @last_blog_post.title, posts_path
+
     .last_comments.last_thing
       %h3 derniers commentaires :
       %ul
