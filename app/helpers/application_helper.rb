@@ -28,4 +28,13 @@ module ApplicationHelper
       :class => 'cover_album')
   end
 
+
+  def no_one_or_n_comments(comments)
+    case comments.length
+    when 0 then "Aucun commentaire"
+    when 1 then "1 commentaire"
+    else "#{comments.length} commentaires"
+    end
+  end
+
 end

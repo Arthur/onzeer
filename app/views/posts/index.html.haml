@@ -1,0 +1,20 @@
+%ul.posts
+  - @posts.each do |post|
+    %li.post
+      %h1= post.title
+      .body= post.body
+      .author= post.author.nickname
+      .timestamp= post.created_at.to_s(:db)
+      
+      .comments
+        %p.summary= no_one_or_n_comments(post.comments)
+        %ul.comments
+          - post.comments.each do |comment|
+            %li
+              .body= comment.body
+              .author= comment.author.nickname
+              .timestamp=# comment.created_at.inspect
+          %li.new_comment
+            - form_for(@comment, :url => post_comments_path(post), :html => {:method => :post}) do |f|
+              = f.text_area :body
+              = f.submit "Send"
