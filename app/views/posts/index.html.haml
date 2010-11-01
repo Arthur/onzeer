@@ -12,8 +12,11 @@
           - post.comments.each do |comment|
             %li
               .body= comment.body
-              .author= comment.author.nickname
-              .timestamp=# comment.created_at.inspect
+              .author_and_date
+                %span.author= comment.author.nickname
+                ,
+                %span.date= comment.created_at.to_s(:db) if comment.created_at
+                
           %li.new_comment
             - form_for(@comment, :url => post_comments_path(post), :html => {:method => :post}) do |f|
               = f.text_area :body

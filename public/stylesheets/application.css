@@ -201,7 +201,8 @@ li.playing {
 }
 
 .comments li { position: relative; }
-.comments .author {
+.comments .author_and_date,
+.comments p.author {
   position: absolute; right: 5px; bottom: -15px;
   font-size: 12px;
   font-style: italic;
