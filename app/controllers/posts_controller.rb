@@ -19,4 +19,19 @@ class PostsController < ApplicationController
     end
   end
 
+  def edit
+    @post = Post.find(params[:id])
+    render :action => :new
+  end
+
+  def update
+    @post = Post.find(params[:id])
+    @post.author_id = current_user.id
+    if @post.update_attributes(params[:post])
+      redirect_to :action => :index
+    else
+      render :action => :edit
+    end
+  end
+
 end

@@ -2,6 +2,8 @@
   - @posts.each do |post|
     %li.post
       %h1= post.title
+      - if current_user.admin?
+        .action= link_to "edit", edit_post_path(post)
       .body= post.body
       .author= post.author.nickname
       .timestamp= post.created_at.to_s(:db)
