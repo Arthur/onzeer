@@ -29,7 +29,6 @@
       = yield
 
     #footer
-      - if controller_name != "home"
+      - if controller_name != "home" and current_user
         %p
           = link_to "home", root_path
-      
