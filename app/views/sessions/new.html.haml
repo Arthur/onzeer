@@ -1,19 +1,19 @@
-- form_for(@session, :url => session_path, :html => {:method => :post}) do |f|
-  %p
-    = f.label :openid_url
-    = f.text_field :openid_url
-  %p
-    = f.submit "Login with Gmail or OpenID"
 
+.google
+  - form_for(@session, :url => session_path, :html => {:method => :post}) do |f|
+    = hidden_field_tag "session[openid_provider]", "google"
+    %p= f.submit "Signin with Google Account"
+  %p.hint si tu utilises GMail ou que tu as un compte Google
+.yahoo
+  - form_for(@session, :url => session_path, :html => {:method => :post}) do |f|
+    = hidden_field_tag "session[openid_provider]", "yahoo"
+    %p= f.submit "Signin with Yahoo! Id"
+  %p.hint si tu utilises Yahoo Mail ou que tu as un compte Yahoo! Id
 
-%ul.hints
-  %li
-    %p 
-      Si tu utilises GMail, tu n'as qu'à cliquer en laissant le champ "Openid url" vide.
-  %li
+.openid
+  - form_for(@session, :url => session_path, :html => {:method => :post}) do |f|
     %p
-      Si tu n'utilises pas GMail, il te faut une adresse OpenID, tu peux t'en créer une facilement là :
-      = link_to "Créer une adresse OpenID chez OpenID France", "http://www.openidfrance.fr/home-2/Creez+votre+OpenID.html"
-    %p
-      Ensuite il suffit de revenir ici, et de remplir le champ "Openid url", puis de cliquer sur le bouton de login !
-      
+      = f.label :openid_url, "OpenID Url"
+      = f.text_field :openid_url
+    %p= f.submit "Login with OpenID"
+  %p.hint pour les autres (le plus simple c'est de se créer un compte Google et Yahoo et d'utiliser les boutons précédents !).
