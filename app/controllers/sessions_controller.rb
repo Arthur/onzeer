@@ -14,16 +14,10 @@ class SessionsController < ApplicationController
     logger.debug ["openid_provider_url", session.openid_provider_url].inspect
     open_id_request = consumer.begin(session.openid_provider_url)
 
-    if session.openid_provider # google or yahoo use Attribute Exchange
-      ax_request = OpenID::AX::FetchRequest.new
-      ax_request.add(OpenID::AX::AttrInfo.new("http://axschema.org/contact/email", nil, true ))
-      open_id_request.add_extension(ax_request)
-    else
-      sregreq = OpenID::SReg::Request.new
-      sregreq.request_fields(['email','nickname'], true)
-      open_id_request.add_extension(sregreq)
-      open_id_request.return_to_args['did_sreg'] = 'y'
-    end
+    ax_request = OpenID::AX::FetchRequest.new
+    ax_request.add(OpenID::AX::AttrInfo.new("http://axschema.org/contact/email", nil, true ))
+    open_id_request.add_extension(ax_request)
+
     redirect_to open_id_request.redirect_url(root_url, openid_complete_session_url, params[:immediate])
   end
 
@@ -49,11 +43,6 @@ class SessionsController < ApplicationController
         email = ax_response.data["http://axschema.org/contact/email"].first
         flash[:ax_response] = ax_response.data
       end
-      sreg_resp = OpenID::SReg::Response.from_success_response(openid_response)
-      unless sreg_resp.empty?
-        email = sreg_resp.data["email"]
-      end
-      flash[:sreg_results] = sreg_resp.data
     when OpenID::Consumer::SETUP_NEEDED
       flash[:alert] = "Immediate request failed - Setup Needed"
     when OpenID::Consumer::CANCEL
