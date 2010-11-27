@@ -34,7 +34,8 @@ class ApplicationController < ActionController::Base
 
   def ensure_activated
     if current_user && !current_user.activated
-      redirect_to root_path
+      render :file => "sessions/waiting_activation"
+      false
     end
   end
 
