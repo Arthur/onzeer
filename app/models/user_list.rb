@@ -11,8 +11,22 @@ class UserList
   attr_accessor :user
 
   def accept(modification)
-    album_ids << modification.album_id
+    if modification.action == "add"
+      album_ids << modification.album_id
+    else
+      album_ids.delete(modification.album_id)
+    end
     accepted_modification_ids << modification.id
+    user.save
+  end
+
+  def reject(modification)
+    if modification.action == "remove"
+      album_ids << modification.album_id
+    else
+      album_ids.delete(modification.album_id)
+    end
+    rejected_modification_ids << modification.id
     user.save
   end
 

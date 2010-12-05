@@ -14,6 +14,14 @@ class List
   end
 
   def add(params)
+    add_or_remove(:add, params)
+  end
+
+  def remove(params)
+    add_or_remove(:remove, params)
+  end
+
+  def add_or_remove(action, params)
     author_id = params[:author_id]
     author_id ||= params[:author] && params[:author].id
     album_id = params[:album_id]
@@ -29,7 +37,7 @@ class List
         modification.accept(:author => author)
       end
     end
-    modification = Modification.new(:author_id => author_id, :action => "add", :album_id => album_id)
+    modification = Modification.new(:author_id => author_id, :action => action.to_s, :album_id => album_id)
     modification.list = self
     modifications << modification
     save

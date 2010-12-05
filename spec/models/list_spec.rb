@@ -79,6 +79,7 @@ describe List do
       @list.add(:album_id => "2", :author => pelicano)
       pending_modification = tricky.list_by_id(@list.id).pending_modifications.first
       pending_modification.reject(:author => tricky)
+      @tricky = User.find(tricky.id)
       tricky.list_by_id(@list.id).pending_modifications.should be_empty
       tricky.list_by_id(@list.id).album_ids.should == ["1"]
     end
@@ -87,13 +88,16 @@ describe List do
       @list.add(:album_id => "1", :author => tricky)
       @list.add(:album_id => "2", :author => tricky)
       @list.remove(:album_id => "1", :author => pelicano)
+      @tricky = User.find(tricky.id)
       tricky.list_by_id(@list.id).album_ids.should == ["1", "2"]
+      @pelicano = User.find(pelicano.id)
       pelicano.list_by_id(@list.id).album_ids.should == ["2"]
       pending_modification = tricky.list_by_id(@list.id).pending_modifications.first
       pending_modification.action.should == "remove"
       pending_modification.author_id.should == pelicano.id
       pending_modification.album_id.should == "1"
       pending_modification.accept(:author => tricky)
+      @tricky = User.find(tricky.id)
       tricky.list_by_id(@list.id).pending_modifications.should be_empty
       tricky.list_by_id(@list.id).album_ids.should == ["2"]
     end
