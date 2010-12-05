@@ -9,6 +9,8 @@ class User
   key :activated, Boolean
   key :roles, Array
 
+  many :user_lists
+
   def roles_str
     roles.join(', ')
   end
@@ -29,6 +31,12 @@ class User
 
   def last_uploaded_albums(page = 1)
     Album.paginate(:order => 'created_at DESC', :conditions => {:user_id => id}, :per_page => 10, :page => page)
+  end
+
+  def list_by_id(id)
+    list = user_lists.detect{|l| l.list_id == id}
+    list.user = self if list
+    list
   end
 
 end
