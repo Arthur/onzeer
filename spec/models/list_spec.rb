@@ -49,7 +49,7 @@ describe List do
       user_list = tricky.list_by_id(@list.id)
       user_list.should_not be_nil
       user_list.album_ids.should == ["1"]
-      @list.modifications.should have(1)
+      @list.modifications.length.should == 1
       modif = @list.modifications.first
       modif.author_id.should == tricky.id
       modif.action.should == "add"
