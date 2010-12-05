@@ -16,4 +16,13 @@ class UserList
     user.save
   end
 
+  def list
+    @list ||= List.find(list_id)
+  end
+
+  def pending_modifications(reload = false)
+    @pending_modifications = nil if reload
+    @pending_modifications ||= list.modifications.reject{|m| accepted_modification_ids.include?(m.id) || rejected_modification_ids.include?(m.id) }.each{|m| m.list = list}
+  end
+
 end

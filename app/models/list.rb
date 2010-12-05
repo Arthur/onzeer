@@ -25,6 +25,9 @@ class List
       user_list = UserList.new(:name => name, :list_id => id)
       author.user_lists << user_list
       author.save
+      modifications.each do |modification|
+        modification.accept(:author => author)
+      end
     end
     modification = Modification.new(:author_id => author_id, :action => "add", :album_id => album_id)
     modification.list = self

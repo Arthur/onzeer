@@ -63,12 +63,13 @@ describe List do
       @tricky = User.find(tricky.id)
       tricky.list_by_id(@list.id).album_ids.should == ["1"]
       pelicano.list_by_id(@list.id).album_ids.should == ["1", "2"]
-      tricky.list_by_id(@list.id).pending_modifications.should have(1)
+      tricky.list_by_id(@list.id).pending_modifications.length.should == 1
       pending_modification = tricky.list_by_id(@list.id).pending_modifications.first
       pending_modification.action.should == "add"
       pending_modification.author_id.should == pelicano.id
       pending_modification.album_id.should == "2"
       pending_modification.accept(:author => tricky)
+      @tricky = User.find(tricky.id)
       tricky.list_by_id(@list.id).pending_modifications.should be_empty
       tricky.list_by_id(@list.id).album_ids.should == ["1", "2"]
     end
