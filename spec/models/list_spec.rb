@@ -12,7 +12,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 #         id
 #         name
 #         albums_ids
-#         modif_acceptance_ids
+#         accepted_modification_ids
+#         rejected_modification_ids
 
 
 describe List do
@@ -49,7 +50,7 @@ describe List do
       modif.author_id.should == tricky.id
       modif.action.should == "add"
       modif.album_id.should == "1"
-      user_list.modif_acceptance_ids.should == [modif.id]
+      user_list.accepted_modification_ids.should == [modif.id]
     end
 
     it "should accept event from others" do
