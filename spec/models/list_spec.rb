@@ -19,7 +19,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe List do
 
   def new_user(name)
-    User.new(:name => name)
+    u = User.create(:name => name, :email => "test@test.com")
+    raise u.errors.inspect unless u.valid?
+    u
   end
 
   def tricky
@@ -43,7 +45,9 @@ describe List do
 
     it "should accept new event from user" do
       @list.add(:album_id => "1", :author => tricky)
+      @tricky = User.find(tricky.id)
       user_list = tricky.list_by_id(@list.id)
+      user_list.should_not be_nil
       user_list.album_ids.should == ["1"]
       @list.modifications.should have(1)
       modif = @list.modifications.first
@@ -56,6 +60,7 @@ describe List do
     it "should accept event from others" do
       @list.add(:album_id => "1", :author => tricky)
       @list.add(:album_id => "2", :author => pelicano)
+      @tricky = User.find(tricky.id)
       tricky.list_by_id(@list.id).album_ids.should == ["1"]
       pelicano.list_by_id(@list.id).album_ids.should == ["1", "2"]
       tricky.list_by_id(@list.id).pending_modifications.should have(1)
