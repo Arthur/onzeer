@@ -1,5 +1,20 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
+# List:
+#     name
+#     modifications:
+#         action
+#         author_id
+#         album_id
+# 
+# User:
+#     lists:
+#         id
+#         name
+#         albums_ids
+#         modif_acceptance_ids
+
+
 describe List do
 
   def new_user(name)
@@ -29,8 +44,8 @@ describe List do
       @list.add(:album_id => "1", :author => tricky)
       user_list = tricky.list_by_id(@list.id)
       user_list.album_ids.should == ["1"]
-      @list.modifs.should have(1)
-      modif = @list.modifs.first
+      @list.modifications.should have(1)
+      modif = @list.modifications.first
       modif.author_id.should == tricky.id
       modif.action.should == "add"
       modif.album_id.should == "1"
@@ -59,6 +74,21 @@ describe List do
       pending_modification.reject(:author => tricky)
       tricky.list_by_id(@list.id).pending_modifications.should be_empty
       tricky.list_by_id(@list.id).album_ids.should == ["1"]
+    end
+
+    it "should accept removal from others" do
+      @list.add(:album_id => "1", :author => tricky)
+      @list.add(:album_id => "2", :author => tricky)
+      @list.remove(:album_id => "1", :author => pelicano)
+      tricky.list_by_id(@list.id).album_ids.should == ["1", "2"]
+      pelicano.list_by_id(@list.id).album_ids.should == ["2"]
+      pending_modification = tricky.list_by_id(@list.id).pending_modifications.first
+      pending_modification.action.should == "remove"
+      pending_modification.author_id.should == pelicano.id
+      pending_modification.album_id.should == "1"
+      pending_modification.accept(:author => tricky)
+      tricky.list_by_id(@list.id).pending_modifications.should be_empty
+      tricky.list_by_id(@list.id).album_ids.should == ["2"]
     end
 
   end
