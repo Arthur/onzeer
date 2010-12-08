@@ -15,16 +15,18 @@ module ApplicationHelper
     end
   end
 
+  def album_name_with_link(album)
+    content_tag(:span, h(album.artist), :class => 'artist') +
+    link_to(h(album.name), album_path(album), :class => 'album_name')
+  end
+
   def album_div(album)
     content_tag(:div,
       content_tag(:div,
         cover_img_tag(album) +
         content_tag(:div, "▲", :class => "pointer"),
         :class => 'in_first_line') +
-      content_tag(:div,
-        content_tag(:span, h(album.artist), :class => 'artist') +
-        link_to(h(album.name), album_path(album), :class => 'album_name'),
-        :class => "info"),
+      content_tag(:div, album_name_with_link(album), :class => "info"),
       :class => 'cover_album')
   end
 

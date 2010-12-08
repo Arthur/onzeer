@@ -1,0 +1,51 @@
+
+.mine
+  %h2 mes listes d'albums
+
+  %ul
+    - @lists.each do |list|
+      %li
+        %h3=h list.name
+        - if list.list.author.id != list.user.id
+          %span.participation= "Participation à la liste de #{list.list.author.nickname}"
+        - unless list.album_ids.blank?
+          %ul.albums_in_list
+            - list.albums.each do |album|
+              %li= album_name_with_link(album)
+
+        - unless list.pending_modifications.blank?
+          %ul.pending_modifications
+            - list.pending_modifications.each do |modification|
+              %li
+                %span.author= modification.author.nickname
+                %span.action= modification.action == "add" ? "propose d'ajouter" : "propose d'enlever"
+                %span.album= "l'album : " + album_name_with_link(modification.album)
+                .accept
+                  - form_tag accept_modification_list_path(modification.list) do
+                    = hidden_field_tag "modification_id", modification.id
+                    = submit_tag "accepter"
+                .reject
+                  - form_tag reject_modification_list_path(modification.list), :method => :delete do
+                    = hidden_field_tag "modification_id", modification.id
+                    = submit_tag "rejeter"
+
+
+  .new
+    %h3 Ajouter une nouvelle liste
+    - form_for @new_list, :url => lists_path, :html => {:method => :POST} do |f|
+      .title
+        = f.text_field :name
+
+      = submit_tag "Ajouter"
+
+
+.others
+  %h2 Listes d'autres utilisateurs
+  %ul
+    - List.all.delete_if{|list| @lists.map(&:list_id).include?(list.id)}.each do |list|
+      %li
+        %span.name= list.name
+        %span.author= list.author.nickname
+        .follow
+          - form_tag follow_list_path(list) do
+            = submit_tag "participer"

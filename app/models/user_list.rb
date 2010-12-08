@@ -17,6 +17,7 @@ class UserList
       album_ids.delete(modification.album_id)
     end
     accepted_modification_ids << modification.id
+    RAILS_DEFAULT_LOGGER.debug "accepted_modification #{modification.id} by #{user.id}"
     user.save
   end
 
@@ -34,9 +35,17 @@ class UserList
     @list ||= List.find(list_id)
   end
 
+  def albums
+    @albums ||= album_ids.map{|id| Album.find(id)}.compact
+  end
+
   def pending_modifications(reload = false)
     @pending_modifications = nil if reload
     @pending_modifications ||= list.modifications.reject{|m| accepted_modification_ids.include?(m.id) || rejected_modification_ids.include?(m.id) }.each{|m| m.list = list}
+  end
+
+  def to_param
+    id
   end
 
 end

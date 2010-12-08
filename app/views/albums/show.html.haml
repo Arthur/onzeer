@@ -32,3 +32,30 @@
   = render :partial => "votes.html"
 
   = render :partial => "comments.html"
+
+  .lists
+    - in_lists = current_user.user_lists.select{|list| list.album_ids.include?(@album.id)}
+    - other_lists = current_user.user_lists - in_lists
+    .in_lists
+      - unless in_lists.blank?
+        %p Dans les listes suivantes :
+        %ul
+          - in_lists.each do |list|
+            %li
+              %span.name=h list.name
+              .remove
+                - form_tag remove_album_list_path(list.list_id), :method => :delete do
+                  = hidden_field_tag :album_id, @album.id
+                  = submit_tag "enlever"
+
+    .not_in_lists
+      - unless other_lists.blank?
+        %p l'ajouter à une liste :
+        %ul
+          - other_lists.each do |list|
+            %li
+              %span.name=h list.name
+              .add
+                - form_tag add_album_list_path(list.list_id) do
+                  = hidden_field_tag :album_id, @album.id
+                  = submit_tag "ajouter"

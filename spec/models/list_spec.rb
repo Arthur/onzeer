@@ -37,6 +37,11 @@ describe List do
     list.should be_valid
   end
 
+  it "should create the user_list" do
+    list = List.create(:name => "a list", :author => tricky)
+    tricky.list_by_id(list.id).should_not be_nil
+  end
+
   describe "created by tricky" do
 
     before :each do 
