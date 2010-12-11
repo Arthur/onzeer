@@ -37,7 +37,7 @@ function playNow(id, auto) {
     // set the class playing on the current track_li
     track_element.addClass('playing');
   }
-  // audio.get(0).volume = 0.1;
+  audio.get(0).volume = 0.5;
   audio.bind("ended", trackEnded);
 
   setTimeout(function(){ $('#time_bar').trigger("showCurrentTime"); }, 100);
