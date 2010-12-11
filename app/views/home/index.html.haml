@@ -20,7 +20,7 @@
     .users
       %h2 Utilisateurs
       %ul
-        - User.all.each do |user|
+        - @users.each do |user|
           - votes = user.last_votes
           - last_uploaded = user.last_uploaded_albums
           - unless votes.empty? && last_uploaded.empty?
