@@ -18,7 +18,7 @@ class Paginator
   end
 
   def next_page
-    page < pages_count - 1 ? page + 1 : nil
+    page < pages_count ? page + 1 : nil
   end
 
   def ids_in_page
