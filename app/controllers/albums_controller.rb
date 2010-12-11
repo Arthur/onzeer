@@ -5,7 +5,9 @@ class AlbumsController < ApplicationController
     if q = params[:q]
       # conditions = {:artist => /#{q}/i, :name => /#{q}/i}
       # see http://www.mongodb.org/display/DOCS/OR+operations+in+query+expressions
-      conditions = { "$where" => "this.name.match(/#{q}/i) || this.artist.match(/#{q}/i)" }
+      # this can shutdown the server !
+      # conditions = { "$where" => "this.name.match(/#{q}/i) || this.artist.match(/#{q}/i)" }
+      conditions = nil # disabled for now.
     end
     if params[:randomly]
       @albums = Album.find_randomly
