@@ -6,6 +6,7 @@
     - @lists.each do |list|
       %li
         %h3=h list.name
+        %span.count= "(#{pluralize(list.album_ids.length, "album")})"
         - if list.list.author.id != list.user.id
           %span.participation= "Participation à la liste de #{list.list.author.nickname}"
         - unless list.album_ids.blank?
