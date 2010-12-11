@@ -9,9 +9,8 @@
         - if list.list.author.id != list.user.id
           %span.participation= "Participation à la liste de #{list.list.author.nickname}"
         - unless list.album_ids.blank?
-          %ul.albums_in_list
-            - list.albums.each do |album|
-              %li= album_name_with_link(album)
+          - paginator = Paginator.new(list.album_ids, :class => Album)
+          .albums_group= render :partial => "albums/paginated", :locals => {:albums => paginator.objects_in_page, :paginator => paginator, :albums_params => {:user_id => list.user.id, :list_id => list.list_id}}
 
         - unless list.pending_modifications.blank?
           %ul.pending_modifications

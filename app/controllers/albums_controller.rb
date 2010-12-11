@@ -32,7 +32,20 @@ class AlbumsController < ApplicationController
         :paginator => votes,
         :albums_params => {:user_id => user.id, :preferred => true}
       }
+      return
     end
+    if params[:user_id] && params[:list_id]
+      user = User.find(params[:user_id])
+      list = user.list_by_id(params[:list_id])
+      paginator = Paginator.new(list.album_ids, :class => Album, :page => params[:page])
+      render :partial => "albums/paginated", :locals => {
+        :albums => paginator.objects_in_page,
+        :paginator => paginator,
+        :albums_params => {:user_id => list.user.id, :list_id => list.list_id}
+      }
+      return
+    end
+
     @albums ||= Album.paginate(:order => 'artist, name', :per_page => params[:limit] || 50, :conditions => conditions, :page => params[:page])
   end
 
