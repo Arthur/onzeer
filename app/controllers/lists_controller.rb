@@ -15,12 +15,12 @@ class ListsController < ApplicationController
 
   def add_album
     list.add(:album_id => params[:album_id], :author => current_user)
-    redirect_to album_path(params[:album_id])
+    list_in_album_update_response
   end
 
   def remove_album
     list.remove(:album_id => params[:album_id], :author => current_user)
-    redirect_to album_path(params[:album_id])
+    list_in_album_update_response
   end
 
   def accept_modification
@@ -40,6 +40,19 @@ class ListsController < ApplicationController
   end
 
 protected
+
+  def list_in_album_update_response
+    respond_to do |format|
+      format.js do
+        @album = Album.find(params[:album_id])
+        render :partial => "albums/lists"
+      end
+      format.html do
+        redirect_to album_path(params[:album_id])
+      end
+    end
+  end
+
   def list
     @list ||= List.find(params[:id])
   end

@@ -276,6 +276,14 @@ function setupPlayer(tracks) {
     return false;
   });
 
+  $('.album .lists input[type="submit"]').live('click', function(event) {
+    var form = $(this).parents('form');
+    $.post(form.attr('action'), form.serialize(), function (data) {
+      $('.lists').replaceWith(data);
+    });
+    return false;
+  });
+
 }
 
 $(document).ready(function() {
