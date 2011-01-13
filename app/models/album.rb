@@ -88,7 +88,8 @@ class Album
     UserVote.delete_all(:album_id => id, :author_id => user.id)
     votes.delete_if{|v| v.author_id == user.id}
     votes << Vote.new(:note => -1, :author => user)
-    UserVote.create(:album_id => id, :author_id => user.id, :note => -1)
+    # only create UserVote for positive ones for now.
+    # UserVote.create(:album_id => id, :author_id => user.id, :note => -1)
   end
 
   def haters
