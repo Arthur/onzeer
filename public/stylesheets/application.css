@@ -1,5 +1,7 @@
+h1, h2, h3,
 ul, li, p { margin: 0; padding: 0; }
 ul li { list-style-type: none; }
+
 
 .header {position: absolute; top: 0; right: 0;}
 .header > div { float:left; margin: .5em; padding: 0;}
@@ -65,7 +67,7 @@ div.album,
   width: 500px; left: 200px;
   background-color: #bbb;
   border: 1px solid #fff;
-  -webkit-border-radius: 5px; 
+  -webkit-border-radius: 5px;
 }
 #player .info_box > div { position: absolute; }
 #player .img {
@@ -100,9 +102,9 @@ div.album,
 .album .tracks .album_name { display:none; }
 
 
-#browser > ul { 
+#browser > ul {
   position: absolute;
-  margin: 0; padding: 0; 
+  margin: 0; padding: 0;
   overflow-y: auto;
   border: 2px solid #999;
 }
@@ -155,7 +157,7 @@ li.playing {
   width: 100%;
   background-color: #bbb;
   border: 1px solid #fff;
-  -webkit-border-radius: 5px; 
+  -webkit-border-radius: 5px;
 }
 .tracks ul li {
   position: relative;
@@ -199,7 +201,8 @@ li.playing {
 }
 
 .comments li { position: relative; }
-.comments .author {
+.comments .author_and_date,
+.comments p.author {
   position: absolute; right: 5px; bottom: -15px;
   font-size: 12px;
   font-style: italic;
@@ -297,17 +300,17 @@ div.album {
   padding: 1em;
   margin: 1em 3em 2em;
   background-color: #E8E8E8;
-  -webkit-border-radius: 1em; 
+  -webkit-border-radius: 1em;
   -webkit-box-shadow: rgb(0, 0, 0) 0px 2px 5px;
 }
 
-#player { 
+#player {
   margin-bottom: 0;
   -webkit-border-bottom-left-radius: 0;
   -webkit-border-bottom-right-radius: 0;
 }
 
-div.album { 
+div.album {
   margin-top: 0;
   -webkit-border-top-left-radius: 0;
   -webkit-border-top-right-radius: 0;
@@ -335,7 +338,7 @@ li.album {
 
 .albums_group {
   position: relative;
-  height: 100px;
+  height: 50px;
 }
 /* we specified albums_group height because content are positionned in absolute in it */
 
@@ -344,23 +347,23 @@ li.album {
 .albums_group .links,
 .albums_group .albums {
   position:absolute;
-  top: 20px;
+  top: 0;
   height: 46px;
 }
 .albums_group .albums {
-  margin: 15px 40px;
+  margin: 0px 40px;
   width: 460px;
   border: 1px solid #999;
   background-color: #DDD;
 }
 .albums_group .links {
-  margin: 15px 20px;
+  margin: 0px 20px;
   width: 500px;
 /*  border: 1px solid red;*/
 }
 .albums_group .albums li {
   float: left;
-  width: 42px; 
+  width: 42px;
   margin: 2px 1px;
   padding: 0px 1px;
   cursor: pointer;
@@ -423,8 +426,6 @@ li.album {
 .albums_group ul:hover li .cover_album span { top: 0.1em; }
 .albums_group ul:hover li .cover_album a    { top: 1.1em; }
 
-.preferred_albums .albums_group { height: 80px; }
-.preferred_albums .albums_group ul { top: 20px; }
 
 /* last_thing : last_listenings & last_comments styling */
 .last_thing li { position: relative; width: 200px; height: 25px; border: 1px solid #999;}
@@ -456,7 +457,7 @@ li.album {
 .last_listenings .more_info {
   position: absolute;
   top: -10px;
-  right: 200px;
+  right: 185px;
   padding: 0.5em 20px;
   margin: 0 10px;
   width: 390px;

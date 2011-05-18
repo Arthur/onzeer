@@ -2,7 +2,6 @@ require 'openid/store/memcache'
 require 'openid/extensions/ax'
 require 'openid/extensions/sreg'
 
-
 class SessionsController < ApplicationController
   skip_before_filter :login_required
 
@@ -12,19 +11,13 @@ class SessionsController < ApplicationController
 
   def create
     session = Session.new(params[:session])
-    logger.debug ["openid_url_or_gmail", session.openid_url_or_gmail].inspect
-    open_id_request = consumer.begin(session.openid_url_or_gmail)
+    logger.debug ["openid_provider_url", session.openid_provider_url].inspect
+    open_id_request = consumer.begin(session.openid_provider_url)
 
-    if session.gmail?
-      ax_request = OpenID::AX::FetchRequest.new
-      ax_request.add(OpenID::AX::AttrInfo.new("http://schema.openid.net/contact/email", nil, true ))
-      open_id_request.add_extension(ax_request)
-    else
-      sregreq = OpenID::SReg::Request.new
-      sregreq.request_fields(['email','nickname'], true)
-      open_id_request.add_extension(sregreq)
-      open_id_request.return_to_args['did_sreg'] = 'y'      
-    end
+    ax_request = OpenID::AX::FetchRequest.new
+    ax_request.add(OpenID::AX::AttrInfo.new("http://axschema.org/contact/email", nil, true ))
+    open_id_request.add_extension(ax_request)
+
     redirect_to open_id_request.redirect_url(root_url, openid_complete_session_url, params[:immediate])
   end
 
@@ -47,14 +40,9 @@ class SessionsController < ApplicationController
     when OpenID::Consumer::SUCCESS
       ax_response = OpenID::AX::FetchResponse.from_success_response(openid_response)
       if ax_response && ax_response.data
-        email = ax_response.data["http://schema.openid.net/contact/email"].first
+        email = ax_response.data["http://axschema.org/contact/email"].first
         flash[:ax_response] = ax_response.data
       end
-      sreg_resp = OpenID::SReg::Response.from_success_response(openid_response)
-      unless sreg_resp.empty?
-        email = sreg_resp.data["email"]
-      end
-      flash[:sreg_results] = sreg_resp.data
     when OpenID::Consumer::SETUP_NEEDED
       flash[:alert] = "Immediate request failed - Setup Needed"
     when OpenID::Consumer::CANCEL

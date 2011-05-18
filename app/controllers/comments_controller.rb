@@ -6,12 +6,19 @@ class CommentsController < ApplicationController
   end
 
   def create
-    album.comments << Comment.new(params[:comment])
-    @comment = album.comments.last
+    @comment = Comment.new(params[:comment])
     @comment.author = current_user
-    @album.save
-    @album.save_user_comment_for @comment
-    create_or_update_response
+    
+    if album
+      album.comments << @comment
+      @album.save
+      @album.save_user_comment_for @comment
+      create_or_update_response
+    elsif post
+      post.comments << @comment
+      post.save
+      redirect_to posts_path
+    end
   end
 
   def edit
@@ -35,12 +42,20 @@ class CommentsController < ApplicationController
     end
   end
 
-  def album
-    @album ||= Album.find(params[:album_id])
+  def comment_from_params_id
+    album_or_post.comments.detect{|c| c.id == params[:id]}
   end
 
-  def comment_from_params_id
-    album.comments.detect{|c| c.id == params[:id]}
+  def album_or_post
+    album || post
+  end
+
+  def album
+    @album ||= params[:album_id] && Album.find(params[:album_id])
+  end
+
+  def post
+    @post ||= params[:post_id] && Post.find(params[:post_id])
   end
 
 end

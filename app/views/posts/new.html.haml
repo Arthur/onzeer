@@ -1,0 +1,10 @@
+- form_for @post do |f|
+  .title
+    = f.label :title, "Titre :"
+    = f.text_field :title
+
+  .body
+    %div= f.text_area :body
+
+  = submit_tag "Sauver"
+ 

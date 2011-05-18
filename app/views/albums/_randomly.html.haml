@@ -1,7 +1,5 @@
-.albums_group.randomly
-  %h3 Albums choisis aléatoirement:
-  %ul.links
-    %li.last= link_to "∞", albums_path(:randomly => true)
-  %ul.albums
-    - Album.find_randomly.each do |album|
-      %li= album_div(album)
+%ul.links
+  %li.last= link_to "∞", albums_path(:randomly => true)
+%ul.albums
+  - Album.find_randomly.each do |album|
+    %li= album_div(album)

@@ -3,31 +3,44 @@
   - form_tag albums_path, :method => :get do
     = text_field_tag :q
     = submit_tag "Rechercher"
-  
+
 
 %p= link_to "liste (très moche) des albums", albums_path
 %p= link_to "ajouter des fichiers", new_track_path
 
 %ul.two_cols
   %li.left_col
-    =render :partial => "albums/randomly"
-    =render :partial => "albums/last"
+    .randomly
+      %h3 Albums choisis aléatoirement:
+      .albums_group=render :partial => "albums/randomly"
+    .last_albums
+      %h3 les derniers albums importés:
+      .albums_group=render :partial => "albums/paginated", :locals => {:albums => @last_albums, :albums_params => {:last => true}}
 
-    .preferred_albums
-      %h3
-        Albums préférés:
+    .users
+      %h2 Utilisateurs
       %ul
-        - User.all.each do |user|
-          - albums = user.last_preferred_albums
-          - unless albums.empty?
+        - @users.each do |user|
+          - votes = user.last_votes
+          - last_uploaded = user.last_uploaded_albums
+          - unless votes.empty? && last_uploaded.empty?
             %li
-              .albums_group
-                =h(user.nickname)
-                %ul.albums
-                  - albums.each do |album|
-                    %li= album_div(album)
+              %h3.nickname=h(user.nickname)
+              - unless votes.empty?
+                %p= "#{votes.total_entries} albums préférés."
+                .albums_group
+                  = render :partial => "albums/paginated", :locals => {:albums => votes.map(&:album), :paginator => votes, :albums_params => {:user_id => user.id, :preferred => true}}
+              - unless last_uploaded.empty?
+                %p= "#{last_uploaded.total_entries} albums uploadés."
+                .albums_group
+                  = render :partial => "albums/paginated", :locals => {:albums => last_uploaded, :albums_params => {:user_id => user.id, :last => true}}
 
   %li.right_col
+    - if @last_blog_post
+      .last_blog_post
+        %h3 Sur le blog :
+        = link_to @last_blog_post.title, posts_path
+
     .last_comments.last_thing
       %h3 derniers commentaires :
       %ul
