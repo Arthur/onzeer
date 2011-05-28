@@ -27,7 +27,7 @@ class SessionsController < ApplicationController
   end
 
   def openid_complete
-    parameters = params.reject{|k,v|request.path_parameters[k]}
+    parameters = params.reject{|k,v| !(k =~ /^openid/) }
     openid_response = consumer.complete(parameters, openid_complete_session_url)
     email = nil
     case openid_response.status
@@ -44,14 +44,15 @@ class SessionsController < ApplicationController
         flash[:ax_response] = ax_response.data
       end
     when OpenID::Consumer::SETUP_NEEDED
-      flash[:alert] = "Immediate request failed - Setup Needed"
+      flash[:error] = "Immediate request failed - Setup Needed"
     when OpenID::Consumer::CANCEL
-      flash[:alert] = "OpenID transaction cancelled."
+      flash[:error] = "OpenID transaction cancelled."
     else
-      flash[:alert] = "Unknow OpenID status #{openid_response.status}"
+      flash[:error] = "Unknow OpenID status #{openid_response.status}"
     end
     if email
-      self.current_user = User.find_or_create_by_email(email)
+      # self.current_user = User.find_or_create_by_email(email)
+      session[:email] = email
       redirect_to session[:return_to] || root_path
     else
       redirect_to new_session_path

@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
   def authorized?
     true
   end
+
   def login_required
     unless current_user && authorized?
       respond_to do |f|
@@ -48,6 +49,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
+    return User.all.first if Rails.env == "development"
     return @current_user unless @current_user.nil?
     @current_user ||= session[:user_id] && User.find(session[:user_id]) rescue nil
     @current_user ||= params[:token] && User.find(Rails.cache.fetch(params[:token])) rescue nil

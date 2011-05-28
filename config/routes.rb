@@ -1,26 +1,50 @@
-ActionController::Routing::Routes.draw do |map|
+Onzeer::Application.routes.draw do
 
-  map.resource :session, :member => {:openid_complete => :get}
+  resource :session do
+    member do 
+      get :openid_complete
+    end
+  end
 
-  map.resources :tokens
+  resources :tokens
 
-  map.resources :users, :has_many => :lists
+  resources :users do
+    resources :lists
+  end
 
-  map.resources :tracks, :member => {:just_listened => :post}, :collection => {:wanted => :post}
+  resources :tracks do
+    member do
+      post :just_listened
+    end
+    collection { post :wanted}
+  end
 
-  map.resources :albums, :member => {:like => :post, :hate => :post, :destroy_vote => :delete, :mb_releases => :get}, :has_many => [:comments]
+  resources :albums do
+    member do
+      post :like
+      post :hate
+      delete :destroy_vote
+      get :mb_releases
+    end
+    resources :comments
+  end
 
-  map.resources :posts, :has_many => [:comments]
-  map.connect 'blog', :controller => "posts"
+  resources :posts do
+    resources :comments
+  end
 
-  map.resources :lists, :member => {
-    :follow => :post,
-    :add_album => :post, 
-    :remove_album => :delete,
-    :accept_modification => :post,
-    :reject_modification => :delete,
-  }
+  # match 'blog' :to => "posts"
 
-  map.root :controller => 'home'
+  resources :lists do
+    member do
+      post :follow
+      post :add_album
+      delete :remove_album
+      post :accept_modification
+      delete :reject_modification
+    end
+  end
+
+  root :to => 'home#index'
 
 end

@@ -1,5 +1,10 @@
 class Session
 
+  self.class_eval do
+    extend ActiveModel::Naming
+  end
+  def to_key; []; end
+
   attr_accessor :email
   attr_accessor :openid_url
   attr_accessor :openid_provider

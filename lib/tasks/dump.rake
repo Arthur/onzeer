@@ -1,4 +1,4 @@
-require 'mp3info'
+# require 'mp3info'
 def album_to_html(a)
   html = ""
   html << "<li>"

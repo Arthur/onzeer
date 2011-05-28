@@ -1,17 +1,18 @@
 class Post
 
-  include MongoMapper::Document
-  include Timestamp
-  timestamps
+  # include MongoMapper::Document
+  # include Timestamp
+  # timestamps
+  include MongoRecord
 
-  key :title, String, :required => true
-  key :body, String, :required => true
-  key :author_id, String, :required => true
-  belongs_to :author, :class_name => "User"
+  key :title #, String, :required => true
+  key :body # String, :required => true
+  key :author_id #, String, :required => true
+  # belongs_to :author, :class_name => "User"
 
-  many :comments
+  # many :comments
 
-  before_save :timestamps_in_comments
+  # before_save :timestamps_in_comments
 
   def timestamps_in_comments
     current_time = Time.now.utc

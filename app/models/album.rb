@@ -1,31 +1,34 @@
 class Album
 
-  include MongoMapper::Document
-  include Timestamp
+  # include MongoMapper::Document
+  # include Timestamp
+  # 
+  # after_save :update_tracks
 
-  after_save :update_tracks
+  include MongoRecord
 
-  key :artist, String, :required => true
-  key :name, String, :required => true
-  key :track_ids, Array, :required => true
-  key :cover, String
-  key :amazon_asin, String
-  key :musicbrainz_release_id, String
+  key :artist #, String, :required => true
+  key :name #, String, :required => true
+  key :track_ids #, Array, :required => true
+  key :cover #, String
+  key :amazon_asin #, String
+  key :musicbrainz_release_id #, String
 
-  key :user_id, String # author
+  key :user_id #, String # author
 
-  timestamps
-
-  many :votes
-  many :comments
+  # timestamps
+  # 
+  # many :votes
+  # many :comments
 
   def self.find_randomly(number = 10)
     count = self.count
-    (0...number).map{ first(:offset => rand(count))}.compact
+    (0...number).map{ find().limit(1).skip(rand(count)).first()}.compact
   end
 
   def self.find_last(page=nil)
-    Album.paginate(:order => 'created_at DESC', :per_page => 10, :page => page)
+    # Album.paginate(:order => 'created_at DESC', :per_page => 10, :page => page)
+    find.sort(['_id', 'descending']).limit(10).skip((page||0)*10)
   end
 
   def tracks
