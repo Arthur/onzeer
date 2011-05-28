@@ -1,12 +1,13 @@
 class UserList
 
-  include MongoMapper::EmbeddedDocument
+  # include MongoMapper::EmbeddedDocument
+  include MongoRecord
 
-  key :list_id, String, :required => true
-  key :name, String, :required => true
-  key :album_ids, Array
-  key :accepted_modification_ids, Array
-  key :rejected_modification_ids, Array
+  key :list_id    #, String, :required => true
+  key :name       #, String, :required => true
+  key :album_ids  #, Array
+  key :accepted_modification_ids  #, Array
+  key :rejected_modification_ids  #, Array
 
   attr_accessor :user
 

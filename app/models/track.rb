@@ -1,27 +1,28 @@
 class Track
-  include MongoMapper::Document
-  include Timestamp
+  # include MongoMapper::Document
+  # include Timestamp
+  # 
+  # timestamps
 
-  timestamps
+  include MongoRecord
+  key :artist       #, String, :required => true
+  key :album_name   #, String, :required => true
+  key :album_id     #, String
+  key :title        #, String, :required => true
+  key :nb           #, Integer, :required => true
+  key :published    #, Boolean
+  key :year         #, Integer
+  key :bitrate      #, Integer
+  key :seconds      #, Integer, :required => true
+  key :format       #, String, :required => true
+  key :cover        #, String
+  key :file         #, String, :required => true
+  key :compilation  #, Boolean
 
-  key :artist, String, :required => true
-  key :album_name, String, :required => true
-  key :album_id, String
-  key :title, String, :required => true
-  key :nb, Integer, :required => true
-  key :published, Boolean
-  key :year, Integer
-  key :bitrate, Integer
-  key :seconds, Integer, :required => true
-  key :format, String, :required => true
-  key :cover, String
-  key :file, String, :required => true
-  key :compilation, Boolean
+  key :user_id      #, String#, :required => true
 
-  key :user_id, String#, :required => true
-
-  after_save :set_album
-  after_save :move_file
+  # after_save :set_album
+  # after_save :move_file
 
   attr_accessor :file_data, :content_type, :original_path
 

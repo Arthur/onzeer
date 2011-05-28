@@ -1,15 +1,14 @@
 class Modification
 
-  include MongoMapper::EmbeddedDocument
-  include Timestamp
-  # embedded_in :list
-  attr_accessor :list
-
-  belongs_to :author, :class_name => "User"
-  belongs_to :album
-  key :author_id, String, :required => true
-  key :album_id, String, :required => true
-  key :action, String, :required => true # add or remove
+  # include MongoMapper::EmbeddedDocument
+  # include Timestamp
+  # attr_accessor :list
+  # 
+  # belongs_to :author, :class_name => "User"
+  # belongs_to :album
+  # key :author_id, String, :required => true
+  # key :album_id, String, :required => true
+  # key :action, String, :required => true # add or remove
 
   def accept(params)
     accept_or_reject(:accept, params)

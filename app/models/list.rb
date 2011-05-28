@@ -1,15 +1,15 @@
 class List
-  include MongoMapper::Document
+  # include MongoMapper::Document
+  # 
+  # key :name, String, :required => true
+  # many :modifications
+  # key :author_id, String, :required => true
+  # # belongs_to :author, :class_name => "User"
+  # 
+  # include Timestamp
+  # timestamps
 
-  key :name, String, :required => true
-  many :modifications
-  key :author_id, String, :required => true
-  # belongs_to :author, :class_name => "User"
-
-  include Timestamp
-  timestamps
-
-  after_save :create_author_user_list
+  # after_save :create_author_user_list
 
   def author=(author)
     self.author_id = author.id
