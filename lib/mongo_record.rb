@@ -1,6 +1,10 @@
 module MongoRecord
   extend ActiveSupport::Concern
 
+  included do
+    extend ActiveModel::Naming
+  end
+
   module ClassMethods
     def mongohq_url
       return @uri unless @uri.nil?

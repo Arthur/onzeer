@@ -14,11 +14,6 @@ class User
 
   # many :user_lists
 
-  self.class_eval do
-    extend ActiveModel::Naming
-  end
-  def to_key; []; end
-
   def self.find_or_create_by_email(email)
     user = find(:email => email).first
     return user if user
