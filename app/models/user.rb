@@ -14,6 +14,18 @@ class User
 
   # many :user_lists
 
+  def self.find_or_create_by_email(email)
+    user = find(:email => email)
+    return user if user
+    user = new(:email => email)
+
+    # first user is admin :
+    user.roles = [admin] if count == 0
+
+    user.save
+    user
+  end
+
   def roles_str
     roles.join(', ')
   end

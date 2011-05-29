@@ -51,8 +51,8 @@ class SessionsController < ApplicationController
       flash[:error] = "Unknow OpenID status #{openid_response.status}"
     end
     if email
-      # self.current_user = User.find_or_create_by_email(email)
-      session[:email] = email
+      self.current_user = User.find_or_create_by_email(email)
+      # session[:email] = email
       redirect_to session[:return_to] || root_path
     else
       redirect_to new_session_path
