@@ -41,6 +41,7 @@ module MongoRecord
         if id_or_query.is_a? Hash
           MongoCursorProxy.new(collection.find(id_or_query), self)
         else
+          id = id_or_query
           id = BSON::ObjectId(id) if id.is_a? String
           new(collection.find_one(id))
         end
