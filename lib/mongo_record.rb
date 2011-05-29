@@ -118,10 +118,14 @@ module MongoRecord
       self.class.collection.remove({"_id" => id})
     end
 
-    def update_attributes(new_attributes)
+    def attributes=(new_attributes)
       new_attributes.each do |attr,v|
         send("#{attr}=",v)
       end
+    end
+
+    def update_attributes(new_attributes)
+      self.attributes = new_attributes
       update
     end
 
