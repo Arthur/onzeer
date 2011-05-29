@@ -46,6 +46,10 @@ class User
     roles.include?("admin")
   end
 
+  def activated?
+    !!activated
+  end
+
   def last_votes(page = 1)
     # UserVote.paginate(:order => 'created_at DESC', :conditions => {:author_id => id}, :per_page => 10, :page => page)
     UserVote.find(:author_id => id).sort(['_id', 'descending']).limit(10).skip((page-1)*10)
