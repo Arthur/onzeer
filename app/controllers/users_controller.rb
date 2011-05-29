@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   skip_before_filter :ensure_nickname
 
   def index
-    @users = User.find(:all)
+    @users = User.all
   end
 
   def show
