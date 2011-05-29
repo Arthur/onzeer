@@ -20,7 +20,10 @@ class User
     user = new(:email => email)
 
     # first user is admin :
-    user.roles = ['admin'] if count == 0
+    if count == 0
+      user.roles = ['admin'] 
+      user.activated = True
+    end
 
     user.save
     user
