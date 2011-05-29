@@ -35,7 +35,7 @@ class User
   end
 
   def roles_str
-    roles.join(', ')
+    (roles || []).join(', ')
   end
 
   def roles_str=(string)
@@ -43,7 +43,7 @@ class User
   end
 
   def admin?
-    roles.include?("admin")
+    (roles || []).include?("admin")
   end
 
   def activated?
