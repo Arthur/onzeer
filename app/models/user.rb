@@ -22,7 +22,7 @@ class User
     # first user is admin :
     if count == 0
       user.roles = ['admin'] 
-      user.activated = True
+      user.activated = true
     end
 
     user.save
