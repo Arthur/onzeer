@@ -15,7 +15,7 @@ class User
   # many :user_lists
 
   def self.find_or_create_by_email(email)
-    user = find(:email => email)
+    user = find(:email => email).first
     return user if user
     user = new(:email => email)
 
