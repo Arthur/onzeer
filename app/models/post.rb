@@ -8,11 +8,19 @@ class Post
   key :title #, String, :required => true
   key :body # String, :required => true
   key :author_id #, String, :required => true
+  
+  key :created_at
+  key :updated_at
+
   # belongs_to :author, :class_name => "User"
 
-  # many :comments
+  many :comments
 
   # before_save :timestamps_in_comments
+
+  def author
+    @author ||= User.find(author_id)
+  end
 
   def timestamps_in_comments
     current_time = Time.now.utc

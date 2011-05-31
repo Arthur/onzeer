@@ -63,11 +63,11 @@ module MongoRecord
     end
 
     def first()
-      find().limit(1).first
+      find().sort(['_id', 'asc']).limit(1).first
     end
 
     def last
-      all.last # FIXME
+      find().sort(['_id', 'desc']).limit(1).first
     end
 
     def key(attribute_name)
@@ -76,6 +76,16 @@ module MongoRecord
       end
       define_method "#{attribute_name}=" do |v|
         attributes[attribute_name.to_s] = v
+      end
+    end
+
+    def many(collection_name)
+      define_method collection_name do
+        collection = instance_variable_get("@#{collection_name}")
+        return collection if collection
+        collection = MongoCollection.new(self, collection_name, collection_name.to_s.singularize.camelcase.constantize)
+        instance_variable_set("@#{collection_name}", collection)
+        return collection
       end
     end
   end

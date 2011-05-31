@@ -1,7 +1,7 @@
 class PostsController < ApplicationController
 
   def index
-    @posts = Post.all
+    @posts = Post.all.sort(['_id','desc'])
     @comment = Comment.new
   end
 
