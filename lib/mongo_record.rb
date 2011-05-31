@@ -3,6 +3,7 @@ module MongoRecord
 
   included do
     extend ActiveModel::Naming
+    include MongoEmbeddedRecord
   end
 
   module ClassMethods
@@ -70,15 +71,6 @@ module MongoRecord
       find().sort(['_id', 'desc']).limit(1).first
     end
 
-    def key(attribute_name)
-      define_method attribute_name do
-        attributes[attribute_name.to_s]
-      end
-      define_method "#{attribute_name}=" do |v|
-        attributes[attribute_name.to_s] = v
-      end
-    end
-
     def many(collection_name)
       define_method collection_name do
         collection = instance_variable_get("@#{collection_name}")
@@ -91,24 +83,6 @@ module MongoRecord
   end
 
   module InstanceMethods
-
-    def initialize(attributes={})
-      @attributes = attributes.stringify_keys!
-    end
-
-    def attributes; @attributes; end
-
-    def id
-      attributes['_id']
-    end
-
-    def to_param
-      id.to_s
-    end
-
-    def to_key
-      [self.class.to_s.underscore]
-    end
 
     def new_record?
       !id
@@ -131,12 +105,6 @@ module MongoRecord
 
     def destroy
       self.class.collection.remove({"_id" => id})
-    end
-
-    def attributes=(new_attributes)
-      new_attributes.each do |attr,v|
-        send("#{attr}=",v)
-      end
     end
 
     def update_attributes(new_attributes)
