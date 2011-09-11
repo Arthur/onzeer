@@ -27,7 +27,7 @@ $(function() {
       $('#content').append(status);
     
       sendMultipleFiles({
-        url: prefix + 'tracks',
+        url: prefix + 'tracks?user_id='+$('#track_user_id').attr('value'),
         input_name: input_name,
         files: input.files,
         onloadstart: function(){ console.log(['start uploading', this]); },
