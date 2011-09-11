@@ -35,6 +35,12 @@ class Track
 
   def file_data=(data)
     @file_data = data
+    RAILS_DEFAULT_LOGGER.info(
+      ["file_data", data, 
+          data.respond_to?(:path) && data.path,
+          data.respond_to?(:content_type) && data.content_type,
+          data.respond_to?(:original_path) && data.original_path
+      ].inspect)
     return unless data && data.respond_to?(:path) && (data.respond_to?(:content_type) || data.respond_to?(:original_path))
     RAILS_DEFAULT_LOGGER.debug(["file_data", data, data.path, data.content_type, data.original_path].inspect)
     self.file = file_data.path
