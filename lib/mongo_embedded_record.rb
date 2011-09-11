@@ -23,6 +23,8 @@ module MongoEmbeddedRecord
 
     def initialize(attributes={})
       @attributes = {}
+      id = attributes.delete("_id")
+      @attributes["_id"] = id if id
       self.attributes = attributes.stringify_keys!
     end
 
