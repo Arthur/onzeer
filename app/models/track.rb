@@ -24,7 +24,6 @@ class Track
   key :user_id      #, String#, :required => true
 
   # after_save :set_album
-  # after_save :move_file
 
   attr_accessor :file_data, :content_type, :original_path, :file
 
@@ -35,16 +34,7 @@ class Track
 
   def file_data=(data)
     @file_data = data
-    RAILS_DEFAULT_LOGGER.info(
-      ["file_data", data, 
-          data.respond_to?(:path) && data.path,
-          data.respond_to?(:content_type) && data.content_type,
-          data.respond_to?(:original_path) && data.original_path,
-          data.respond_to?(:original_filename) && data.original_filename,
-      ].inspect)
-    return unless data && data.respond_to?(:path) && (data.respond_to?(:content_type) || data.respond_to?(:original_path))
-    RAILS_DEFAULT_LOGGER.debug(["file_data", data, data.path, data.content_type, data.original_path].inspect)
-    self.file = file_data.path
+    self.file = data.path if data.respond_to?(:path)
     self.content_type   = data.content_type   if data.respond_to?(:content_type)
     self.original_path  = data.original_path  if data.respond_to?(:original_path)
     self.original_path  = data.original_filename  if data.respond_to?(:original_filename)
@@ -65,21 +55,9 @@ class Track
     if file_data
       save_to_s3
     end
+    set_album
     RAILS_DEFAULT_LOGGER.info("saving track: "+ attributes.inspect)
     super
-  end
-
-  def move_file
-    if file_data
-      path = Rails.root.join('storage', 'tracks', "user_#{user_id}", id[0..1], id[2..3], id[4..-1]+'.'+format)
-      RAILS_DEFAULT_LOGGER.debug(["move_file", file_data, path].inspect)
-      FileUtils.mkdir_p(File.dirname(path))
-      FileUtils.mv(file, path)
-      self.file = path
-      self.file_data = nil
-      set_public_symlink
-      self.save
-    end
   end
 
   def set_album
