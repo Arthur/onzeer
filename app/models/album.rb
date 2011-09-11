@@ -31,6 +31,14 @@ class Album
     find.sort(['_id', 'descending']).limit(10).skip((page||0)*10)
   end
 
+  def self.find_or_create_by_artist_and_name(artist,name)
+    album = find(:artist => artist, :name => name).first
+    return album if album
+    album = new(:artist => artist, :name => name)
+    album.save
+    album
+  end
+
   def tracks
     return @tracks if @tracks
     @tracks = Track.find(:all, :conditions => {:_id => track_ids}, :order => 'nb')
