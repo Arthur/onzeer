@@ -14,6 +14,7 @@ class TracksController < ApplicationController
 
   def new
     puts "DEBUG"
+    p @env
     @track = Track.new
   end
 
