@@ -46,12 +46,12 @@ class Album
 
   def artist=(value)
     @need_tracks_update = true
-    self[:artist] = value
+    self.attributes[:artist] = value
   end
 
   def name=(value)
     @need_tracks_update = true
-    self[:name] = value
+    self.attributes[:name] = value
   end
 
   def save_user_comment_for(comment)
