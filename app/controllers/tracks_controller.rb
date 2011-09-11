@@ -19,6 +19,7 @@ class TracksController < ApplicationController
   def create
     @track = Track.new(params[:track])
     @track.user_id = current_user.id if current_user
+    logger.info("hello there")
     if @track.save
       if params[:qt_uploader]
         render :text => "Ok thanks."
