@@ -1,5 +1,6 @@
 class TracksController < ApplicationController
   skip_before_filter [:verify_authenticity_token], :only => [:create, :wanted]
+  skip_before_filter :login_required, :only => :create
 
   def index
     respond_to do |format|
@@ -13,14 +14,10 @@ class TracksController < ApplicationController
   end
 
   def new
-    puts "DEBUG"
-    p @env
     @track = Track.new
   end
 
   def create
-    puts "DEBUG"
-    raise "debug"
     @track = Track.new(params[:track])
     @track.user_id = current_user.id if current_user
     logger.info("hello there")

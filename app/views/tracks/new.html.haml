@@ -5,4 +5,5 @@
 Ajouter un ou plusieurs fichiers :
 - form_for(@track, :html => {:multipart => true}) do |f|
   = f.file_field(:file_data)
+  = hidden_field_tag 'track[user_id]', current_user && current_user.id
   = submit_tag "Uploader"
