@@ -39,6 +39,11 @@ class Album
     album
   end
 
+
+  def track_ids
+    @track_ids ||= []
+  end
+
   def tracks
     return @tracks if @tracks
     @tracks = Track.find(:all, :conditions => {:_id => track_ids}, :order => 'nb')
