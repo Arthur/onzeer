@@ -74,7 +74,6 @@ class Track
         old_album.remove_track(self)
         old_album.save
       end
-      self.save
     end
   end
 
