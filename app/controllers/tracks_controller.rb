@@ -13,6 +13,7 @@ class TracksController < ApplicationController
   end
 
   def new
+    puts "DEBUG"
     @track = Track.new
   end
 
