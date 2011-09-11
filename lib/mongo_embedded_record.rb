@@ -22,7 +22,8 @@ module MongoEmbeddedRecord
   module InstanceMethods
 
     def initialize(attributes={})
-      @attributes = attributes.stringify_keys!
+      @attributes = {}
+      self.attributes = attributes.stringify_keys!
     end
 
     def attributes; @attributes; end
