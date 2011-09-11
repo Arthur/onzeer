@@ -1,3 +1,5 @@
+require 'digest/sha1'
+
 class Track
   # include MongoMapper::Document
   # include Timestamp
@@ -16,15 +18,15 @@ class Track
   key :seconds      #, Integer, :required => true
   key :format       #, String, :required => true
   key :cover        #, String
-  key :file         #, String, :required => true
   key :compilation  #, Boolean
+  key :sha1
 
   key :user_id      #, String#, :required => true
 
   # after_save :set_album
   # after_save :move_file
 
-  attr_accessor :file_data, :content_type, :original_path
+  attr_accessor :file_data, :content_type, :original_path, :file
 
   def duration
     min = seconds / 60
@@ -39,6 +41,22 @@ class Track
     self.content_type   = data.content_type   if data.respond_to?(:content_type)
     self.original_path  = data.original_path  if data.respond_to?(:original_path)
     set_attributes_from_file
+  end
+
+  def save_to_s3
+    content = file_data.read
+    self.sha1 = Digest::SHA1.hexdigest(content)
+    new_object = file_bucket.objects.build(self.sha1)
+    new_object.content = content
+    new_object.content_type = self.content_type
+    new_object.save
+  end
+
+  def save
+    if file_data
+      save_to_s3
+    end
+    super
   end
 
   def move_file
@@ -164,4 +182,12 @@ class Track
     return "Ok, I want it !"
   end
 
+private
+  def s3_service
+    @s3_service ||= S3::Service.new(:access_key_id => ENV['S3_KEY_ID'], :secret_access_key => ENV['S3_SECRET'])
+  end
+
+  def file_bucket
+    @file_bucket ||= s3_service.buckets.find(ENV['S3_BUCKET_PREFIX']+"-audio-files")
+  end
 end
