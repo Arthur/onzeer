@@ -18,6 +18,7 @@ class TracksController < ApplicationController
 
   def create
     puts "DEBUG"
+    raise "debug"
     @track = Track.new(params[:track])
     @track.user_id = current_user.id if current_user
     logger.info("hello there")
