@@ -26,8 +26,7 @@ class Track
   # after_save :set_album
   # after_save :move_file
 
-  attr_accessor :content_type, :original_path, :file
-  attr_reader :file_data
+  attr_accessor :file_data, :content_type, :original_path, :file
 
   def duration
     min = seconds / 60
@@ -40,13 +39,15 @@ class Track
       ["file_data", data, 
           data.respond_to?(:path) && data.path,
           data.respond_to?(:content_type) && data.content_type,
-          data.respond_to?(:original_path) && data.original_path
+          data.respond_to?(:original_path) && data.original_path,
+          data.respond_to?(:original_filename) && data.original_filename,
       ].inspect)
     return unless data && data.respond_to?(:path) && (data.respond_to?(:content_type) || data.respond_to?(:original_path))
     RAILS_DEFAULT_LOGGER.debug(["file_data", data, data.path, data.content_type, data.original_path].inspect)
     self.file = file_data.path
     self.content_type   = data.content_type   if data.respond_to?(:content_type)
     self.original_path  = data.original_path  if data.respond_to?(:original_path)
+    self.original_path  = data.original_filename  if data.respond_to?(:original_filename)
     set_attributes_from_file
   end
 
