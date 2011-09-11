@@ -26,7 +26,8 @@ class Track
   # after_save :set_album
   # after_save :move_file
 
-  attr_accessor :file_data, :content_type, :original_path, :file
+  attr_accessor :content_type, :original_path, :file
+  attr_reader :file_data
 
   def duration
     min = seconds / 60
