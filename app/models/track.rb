@@ -49,6 +49,7 @@ class Track
     new_object.content = content
     new_object.content_type = self.content_type
     new_object.save
+    @file_data = nil
   end
 
   def save
