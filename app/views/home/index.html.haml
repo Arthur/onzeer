@@ -50,12 +50,12 @@
               %p.cover
                 = cover_img_tag(user_comment.album, 20)
               %p.author
-                = user_comment.comment.author.nickname
+                =h user_comment.author.nickname
             .more_info
               %p.album_name
-                = user_comment.album && link_to(user_comment.album.name, album_path(user_comment.album))
+                =h user_comment.album && link_to(user_comment.album.name, album_path(user_comment.album))
               %p.comment
-                = user_comment.comment.body
+                =h user_comment.comment.body
 
     .last_listenings.last_thing
       %h3 dernières écoutes :
