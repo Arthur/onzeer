@@ -11,7 +11,7 @@
     %ul
       = render :partial => "tracks/track.html", :collection => @album.tracks.map{|r| r}
 
-  = javascript_tag "tracks = #{@album.tracks.to_json};"
+  = javascript_tag "tracks = #{MongoEmbeddedRecord.json_encoder(@album.tracks.map(&:attributes)).to_json};"
 
   - if current_user.admin?
     %p.edit
