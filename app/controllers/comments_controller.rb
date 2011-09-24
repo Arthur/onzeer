@@ -37,7 +37,7 @@ class CommentsController < ApplicationController
 
   def create_or_update_response
     respond_to do |format|
-      format.html { respond_to album }
+      format.html { redirect_to album }
       format.js { render :partial => 'albums/comments' }
     end
   end
