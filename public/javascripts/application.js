@@ -1,5 +1,5 @@
 var covers_path = "cover_files";
-var tracks_path = "audio_files";
+var tracks_path = "onzeer-audio-files";
 var database = null;
 var r = null;
 var tracks = null;
@@ -25,7 +25,7 @@ function playNow(id, auto) {
 
   $('#player .control').removeClass('disabled');
 
-  var audio_src = prefix + tracks_path + '/' + id.substring(0,2) + '/' + id.substring(2,4) + '/' + id.substring(4)  + '.' + track.format;
+  var audio_src = 'https://s3-eu-west-1.amazonaws.com/' + tracks_path + '/' + track.sha1 + '.' + track.format;
   var audio = $('<audio> <source src="'+ audio_src + '" /></audio>').appendTo(player);
 
   $('.tracks li.playing').removeClass('playing');
@@ -241,7 +241,6 @@ function setupPlayer(tracks) {
   $('.album .votes li').live('click', function(event) {
     var form = $(this).find('form');
     $.post(form.attr('action'), form.serialize(), function (data) {
-      console.log(data);
       $('.votes').replaceWith(data);
       display_votes();
     });
@@ -261,7 +260,6 @@ function setupPlayer(tracks) {
   $('.album .comments .new a').live('click', function(event) {
     var a = $(this);
     $.get(a.attr('href'), function (data) {
-      console.log($('.album form', data).get(0))
       a.parent('li').html($('.album form', data).get(0));
       $('.album form input[type="text"]').focus();
     });

@@ -44,8 +44,8 @@ class Track
   def save_to_s3
     content = file_data.read
     self.sha1 = Digest::SHA1.hexdigest(content)
-    RAILS_DEFAULT_LOGGER.info("trying to upload '#{self.sha1}' to s3")
-    new_object = file_bucket.objects.build(self.sha1)
+    RAILS_DEFAULT_LOGGER.info("trying to upload '#{sha1}.#{format}' to s3")
+    new_object = file_bucket.objects.build("#{sha1}.#{format}")
     new_object.content = content
     new_object.content_type = self.content_type
     new_object.save
