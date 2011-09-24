@@ -55,6 +55,7 @@ class TrackInfo
       Mp3Info.open(filename, :encoding => "utf-8") do |mp3|
         cover = mp3.tag2["PIC"] || mp3.tag2["APIC"]
         # cover.sub!(/\000(PNG|JPG).\000/,"") if mp3.tag2['PIC']
+        cover = cover.first if cover.is_a? Array
         cover = cover[6..-1] if mp3.tag2['PIC'] && cover[0] == 0 && (cover[1..3] == "PNG" || cover[1..3] == "JPG") && cover[5] == 0
         cover.sub!(/\000image\/(jpg|jpeg|png)\000(\000|\003)\000/,"") if mp3.tag2['APIC']
         @hash = {
