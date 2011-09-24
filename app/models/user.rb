@@ -47,14 +47,13 @@ class User
 
   def last_votes(page = 1)
     # UserVote.paginate(:order => 'created_at DESC', :conditions => {:author_id => id}, :per_page => 10, :page => page)
-    UserVote.find(:author_id => id).sort(['_id', 'descending']).limit(10).skip((page-1)*10)
+    UserVote.paginate(:conditions => {:author_id => id}, :order => ['_id', 'descending'], :per_page => 10, :page => page)
     # FIXME : conditions to have only positive votes
     # .select{|v| v.note > 0}
   end
 
   def last_uploaded_albums(page = 1)
-    # Album.paginate(:order => 'created_at DESC', :conditions => {:user_id => id}, :per_page => 10, :page => page)
-    Album.find(:user_id => id).sort(['_id', 'descending']).limit(10).skip((page-1)*10)
+    Album.paginate(:order => ['_id', 'descending'], :conditions => {:user_id => id}, :per_page => 10, :page => page)
   end
 
   def list_by_id(id)

@@ -19,6 +19,17 @@ module MongoRecord
       (total_count.to_f/per_page).ceil
     end
 
+    def total_entries; total_count; end
+    def page; current_page; end
+
+    def previous_page
+      page > 1 ? page - 1 : nil
+    end
+
+    def next_page
+      page < total_pages ? page + 1 : nil
+    end
+
     def method_missing(name, *args, &block)
       @records_in_page.send(name, *args, &block)
     end
