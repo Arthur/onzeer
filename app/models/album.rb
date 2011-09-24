@@ -27,8 +27,7 @@ class Album
   end
 
   def self.find_last(page=nil)
-    # Album.paginate(:order => 'created_at DESC', :per_page => 10, :page => page)
-    find.sort(['_id', 'descending']).limit(10).skip((page||0)*10)
+    Album.paginate(:order => ['_id', 'descending'], :per_page => 10, :page => page)
   end
 
   def self.find_or_create_by_artist_and_name(artist,name)
