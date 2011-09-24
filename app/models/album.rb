@@ -1,11 +1,7 @@
 class Album
 
-  # include MongoMapper::Document
-  # include Timestamp
-  # 
-  # after_save :update_tracks
-
   include MongoRecord
+  include Timestamp
 
   key :artist #, String, :required => true
   key :name #, String, :required => true
@@ -16,8 +12,6 @@ class Album
 
   key :user_id #, String # author
 
-  # timestamps
-  # 
   many :votes
   many :comments
 
@@ -36,6 +30,10 @@ class Album
     album = new(:artist => artist, :name => name)
     album.save
     album
+  end
+
+  def before_save
+    set_timestamps(comments)
   end
 
   def after_save

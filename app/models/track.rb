@@ -1,12 +1,10 @@
 require 'digest/sha1'
 
 class Track
-  # include MongoMapper::Document
-  # include Timestamp
-  # 
-  # timestamps
 
   include MongoRecord
+  include Timestamp
+
   key :artist       #, String, :required => true
   key :album_name   #, String, :required => true
   key :album_id     #, String
@@ -22,8 +20,6 @@ class Track
   key :sha1
 
   key :user_id      #, String#, :required => true
-
-  # after_save :set_album
 
   attr_accessor :file_data, :content_type, :original_path, :file
   attr_accessor :old_album
@@ -55,6 +51,7 @@ class Track
   # we need album_id to save it
   # the album need the track_id to save it.
   def before_save
+    set_timestamps
     if file_data
       set_attributes_from_file
       save_to_s3
