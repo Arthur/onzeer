@@ -54,7 +54,7 @@ class AlbumsController < ApplicationController
     respond_to do |format|
       format.html {}
       format.json do
-        render :json => { :view => render_to_string(:action => "show.html", :layout => false), :tracks => album.tracks }
+        render :json => { :view => render_to_string(:action => "show.html", :layout => false), :tracks => album.tracks.map{|r| r} }
       end
     end
   end
