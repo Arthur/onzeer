@@ -6,6 +6,27 @@ module MongoEmbeddedRecord
     extend ActiveModel::Naming
   end
 
+  def self.json_encoder(r)
+    case r
+    when BSON::ObjectId
+      r.to_s
+    when Array
+      r.map{|i| json_encoder(i)}
+    when Hash
+      h = {}
+      r.each do |k,v|
+        if k == '_id'
+          h['id'] = json_encoder(v)
+        else
+          h[k] = json_encoder(v)
+        end
+      end
+      h
+    else
+      r
+    end
+  end
+
   module ClassMethods
 
     def key(attribute_name)
@@ -52,6 +73,10 @@ module MongoEmbeddedRecord
 
     def to_key
       [self.class.to_s.underscore]
+    end
+
+    def to_json
+      MongoEmbeddedRecord.json_encoder(attributes).to_json
     end
 
     def attributes=(new_attributes)

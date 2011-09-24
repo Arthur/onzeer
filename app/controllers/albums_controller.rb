@@ -54,7 +54,7 @@ class AlbumsController < ApplicationController
     respond_to do |format|
       format.html {}
       format.json do
-        render :json => { :view => render_to_string(:action => "show.html", :layout => false), :tracks => album.tracks.map{|r| r} }
+        render :json => MongoEmbeddedRecord.json_encoder({ :view => render_to_string(:action => "show.html", :layout => false), :tracks => album.tracks.map{|r| r.attributes} }).to_json
       end
     end
   end
