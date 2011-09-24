@@ -47,16 +47,23 @@ module MongoEmbeddedRecord
 
   module InstanceMethods
 
+    # keep the original attributes hash for embedded record
+    # call setter if exist though for normal record (examples: virtual attributes like file data, home made dirty checks)
     def initialize(attributes={})
-      @attributes = {}
-      id = attributes.delete("_id")
-      @attributes["_id"] = id if id
-      @attributes["_id"] ||= BSON::ObjectId.new if self.class.embeddable?
-      attributes.each do |attr, v|
-        if respond_to? "#{attr}="
-          send("#{attr}=",v)
-        else
-          @attributes[attr.to_s] = v
+      if self.class.embeddable?
+        @attributes = attributes
+        @attributes["_id"] ||= BSON::ObjectId.new 
+      else
+        @attributes = {}
+        id = attributes.delete('_id')
+        @attributes["_id"] = id if id
+        attributes.each do |attr, v|
+          next if attr == '_id'
+          if respond_to? "#{attr}="
+            send("#{attr}=",v)
+          else
+            @attributes[attr.to_s] = v
+          end
         end
       end
     end

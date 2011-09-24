@@ -3,6 +3,10 @@ class CommentsController < ApplicationController
   def new
     album.comments << Comment.new
     @comment = album.comments.last
+    respond_to do |format|
+      format.html { }
+      format.js { render :action => 'new' }
+    end
   end
 
   def create
@@ -23,6 +27,10 @@ class CommentsController < ApplicationController
 
   def edit
     @comment = comment_from_params_id
+    respond_to do |format|
+      format.html { }
+      format.js { render :action => 'edit' }
+    end
   end
 
   def update
@@ -43,7 +51,7 @@ class CommentsController < ApplicationController
   end
 
   def comment_from_params_id
-    album_or_post.comments.detect{|c| c.id == params[:id]}
+    album_or_post.comments.detect{|c| c.id.to_s == params[:id]}
   end
 
   def album_or_post

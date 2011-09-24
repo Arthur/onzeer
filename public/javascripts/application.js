@@ -251,7 +251,7 @@ function setupPlayer(tracks) {
   $('.album .comments .edit a').live('click', function(event) {
     var a = $(this);
     $.get(a.attr('href'), function (data) {
-      a.parents('li').html($('.album form', data).get(0));
+      a.parents('li').html($('form', data).get(0));
       $('.album form input[type="text"]').focus();
     });
     return false;
@@ -260,7 +260,8 @@ function setupPlayer(tracks) {
   $('.album .comments .new a').live('click', function(event) {
     var a = $(this);
     $.get(a.attr('href'), function (data) {
-      a.parent('li').html($('.album form', data).get(0));
+      console.log(data)
+      a.parent('li').html($('form', data).get(0));
       $('.album form input[type="text"]').focus();
     });
     return false;

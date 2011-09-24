@@ -169,11 +169,13 @@ module MongoRecord
     end
 
     def create
+      Rails.logger.debug("MongoRecord#insert " + [attributes].inspect)
       id = self.class.collection.insert(attributes)
       @attributes['_id'] = attributes.delete(:_id)
     end
 
     def update
+      Rails.logger.debug("MongoRecord#update " + [id,attributes].inspect)
       self.class.collection.update({"_id" => id}, attributes)
     end
 
