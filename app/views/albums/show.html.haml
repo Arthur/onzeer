@@ -7,9 +7,9 @@
     =h @album.name
 
   .tracks.playable
-    %h3= pluralize(@album.tracks.length, "morceau", "morceaux")
+    %h3= pluralize(@album.tracks.count, "morceau", "morceaux")
     %ul
-      = render :partial => "tracks/track.html", :collection => @album.tracks
+      = render :partial => "tracks/track.html", :collection => @album.tracks.map{|r| r}
 
   = javascript_tag "tracks = #{@album.tracks.to_json};"
 

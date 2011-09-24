@@ -25,7 +25,13 @@ module MongoEmbeddedRecord
       @attributes = {}
       id = attributes.delete("_id")
       @attributes["_id"] = id if id
-      self.attributes = attributes.stringify_keys!
+      attributes.each do |attr, v|
+        if respond_to? "#{attr}="
+          send("#{attr}=",v)
+        else
+          @attributes[attr.to_s] = v
+        end
+      end
     end
 
     def attributes; @attributes; end

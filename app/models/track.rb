@@ -26,6 +26,7 @@ class Track
   # after_save :set_album
 
   attr_accessor :file_data, :content_type, :original_path, :file
+  attr_accessor :old_album
 
   def duration
     min = seconds / 60
@@ -38,7 +39,6 @@ class Track
     self.content_type   = data.content_type   if data.respond_to?(:content_type)
     self.original_path  = data.original_path  if data.respond_to?(:original_path)
     self.original_path  = data.original_filename  if data.respond_to?(:original_filename)
-    set_attributes_from_file
   end
 
   def save_to_s3
@@ -52,28 +52,37 @@ class Track
     @file_data = nil
   end
 
-  def save
+  # we need album_id to save it
+  # the album need the track_id to save it.
+  def before_save
     if file_data
+      set_attributes_from_file
       save_to_s3
     end
-    set_album
+    set_album_id
     RAILS_DEFAULT_LOGGER.info("saving track: "+ attributes.inspect)
-    super
   end
 
-  def set_album
+  def after_save
+    set_album_track_ids
+  end
+
+  def set_album_id
     album_artist = artist
     album_artist = "Various" if compilation
     if album.nil? || album.artist != album_artist || album.name != album_name
-      old_album = album
+      self.old_album = album
       self.album = Album.find_or_create_by_artist_and_name(album_artist, album_name)
       album.user_id ||= user_id
-      album.add_track(self)
-      album.save
-      if old_album
-        old_album.remove_track(self)
-        old_album.save
-      end
+    end
+  end
+
+  def set_album_track_ids
+    album.add_track(self)
+    album.save
+    if old_album
+      old_album.remove_track(self)
+      old_album.save
     end
   end
 

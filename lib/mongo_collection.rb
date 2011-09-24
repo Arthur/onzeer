@@ -18,6 +18,10 @@ class MongoCollection
     attributes_array << object.attributes
   end
 
+  def delete_if(&block)
+    attributes_array.delete_if{ |attr| yield(@target_class.new(attr)) }
+  end
+
   def method_missing(name, *args, &block)
     target.send(name, *args, &block)
   end

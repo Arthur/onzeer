@@ -6,6 +6,24 @@ module MongoRecord
     include MongoEmbeddedRecord
   end
 
+  class Paginator
+    def initialize(current_page, per_page, records_in_page, total_count)
+      @current_page = current_page
+      @per_page = per_page
+      @records_in_page = records_in_page
+      @total_count = total_count
+    end
+    attr_reader :current_page, :per_page, :records_in_page, :total_count
+
+    def total_pages
+      (total_count.to_f/per_page).ceil
+    end
+
+    def method_missing(name, *args, &block)
+      @records_in_page.send(name, *args, &block)
+    end
+  end
+
   module ClassMethods
     def mongohq_url
       return @uri unless @uri.nil?
@@ -55,6 +73,30 @@ module MongoRecord
       end
     end
 
+    def delete_all(conditions={})
+      self.collection.remove(conditions)
+    end
+
+    def create(attributes)
+      record = new(attributes)
+      record.save
+      record
+    end
+
+    def paginate(params={})
+      per_page = params[:per_page]
+      per_page ||= 50
+      per_page = per_page.to_i
+      page = (params[:page] || 1).to_i
+      order = params[:order]
+      order ||= '_id'
+
+      count = find(params[:conditions] || {}).count
+      records = find(params[:conditions] || {}).sort(order).limit(per_page).skip((page-1)*per_page)
+
+      MongoRecord::Paginator.new(page, per_page, records, count)
+    end
+
     def count
       collection.count
     end
@@ -96,11 +138,14 @@ module MongoRecord
     end
 
     def save
+      before_save if respond_to? :before_save
       if new_record?
         create
       else
         update
       end
+      after_save if respond_to? :after_save
+      true
     end
 
     def destroy

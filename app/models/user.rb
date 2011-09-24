@@ -12,7 +12,7 @@ class User
   key :activated #, Boolean
   key :roles #, Array
 
-  # many :user_lists
+  many :user_lists
 
   def self.find_or_create_by_email(email)
     user = find(:email => email).first

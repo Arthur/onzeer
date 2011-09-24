@@ -18,8 +18,8 @@ class Album
 
   # timestamps
   # 
-  # many :votes
-  # many :comments
+  many :votes
+  many :comments
 
   def self.find_randomly(number = 10)
     count = self.count
@@ -39,24 +39,27 @@ class Album
     album
   end
 
+  def after_save
+    update_tracks
+  end
 
   def track_ids
-    @track_ids ||= []
+    self.attributes['track_ids'] ||= []
   end
 
   def tracks
     return @tracks if @tracks
-    @tracks = Track.find(:all, :conditions => {:_id => track_ids}, :order => 'nb')
+    @tracks = Track.find(:_id => {'$in' => track_ids}).sort('nb')
   end
 
   def artist=(value)
     @need_tracks_update = true
-    self.attributes[:artist] = value
+    self.attributes['artist'] = value
   end
 
   def name=(value)
     @need_tracks_update = true
-    self.attributes[:name] = value
+    self.attributes['name'] = value
   end
 
   def save_user_comment_for(comment)
@@ -92,7 +95,7 @@ class Album
   def loved_by(user)
     UserVote.delete_all(:album_id => id, :author_id => user.id)
     votes.delete_if{|v| v.author_id == user.id}
-    votes << Vote.new(:note => 1, :author => user)
+    votes << Vote.new(:note => 1, :author_id => user.id)
     UserVote.create(:album_id => id, :author_id => user.id, :note => 1)
   end
 
@@ -103,7 +106,7 @@ class Album
   def hated_by(user)
     UserVote.delete_all(:album_id => id, :author_id => user.id)
     votes.delete_if{|v| v.author_id == user.id}
-    votes << Vote.new(:note => -1, :author => user)
+    votes << Vote.new(:note => -1, :author_id => user.id)
     # only create UserVote for positive ones for now.
     # UserVote.create(:album_id => id, :author_id => user.id, :note => -1)
   end

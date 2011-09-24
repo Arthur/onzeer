@@ -5,7 +5,7 @@
       - if current_user.admin?
         .action= link_to "edit", edit_post_path(post)
       .body= post.body
-      .author= post.author.nickname
+      .author= post.author && post.author.nickname
       .timestamp= post.created_at && post.created_at.to_s(:db)
       
       .comments
