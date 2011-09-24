@@ -17,6 +17,11 @@ module MongoEmbeddedRecord
       end
     end
 
+    # idea from mongomapper.
+    def embeddable?
+      !self.ancestors.include?(MongoRecord)
+    end
+
   end
 
   module InstanceMethods
@@ -25,6 +30,7 @@ module MongoEmbeddedRecord
       @attributes = {}
       id = attributes.delete("_id")
       @attributes["_id"] = id if id
+      @attributes["_id"] ||= BSON::ObjectId.new if self.class.embeddable?
       attributes.each do |attr, v|
         if respond_to? "#{attr}="
           send("#{attr}=",v)
