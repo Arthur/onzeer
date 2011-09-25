@@ -20,14 +20,10 @@ class TracksController < ApplicationController
   def create
     @track = Track.new(params[:track])
     @track.user_id = current_user.id if current_user
-    @track.user_id = params[:user_id] if params[:user_id]
-    logger.info("hello there")
+    @track.user_id = BSON::ObjectId(params[:user_id]) if params[:user_id]
+
     if @track.save
-      if params[:qt_uploader]
-        render :text => "Ok thanks."
-      else
-        redirect_to tracks_path(:mine => true)
-      end
+      render :text => "Ok thanks."
     else
       logger.info(["could not save track: ", @track.errors, @track.content_type, @track.track_info.to_hash].inspect)
       if params[:qt_uploader]
