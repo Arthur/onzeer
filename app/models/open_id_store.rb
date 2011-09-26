@@ -7,17 +7,17 @@ class OpenIdStore < OpenID::Store::Memcache
   end
 
   def store_association(*args)
-    RAILS_DEFAULT_LOGGER.debug ["store_association", args].inspect
+    RAILS_DEFAULT_LOGGER.info ["store_association", args].inspect
     super
   end
 
   def remove_association(*args)
-    RAILS_DEFAULT_LOGGER.debug ["remove_association", args].inspect
+    RAILS_DEFAULT_LOGGER.info ["remove_association", args].inspect
     super
   end
 
   def use_nonce(server_url, timestamp, salt)
-    Rails.logger.debug ["OpenIdStore", "use_nonce", server_url, timestamp, salt].inspect
+    Rails.logger.info ["OpenIdStore", "use_nonce", server_url, timestamp, salt].inspect
     return false if (timestamp - Time.now.to_i).abs >  OpenID::Nonce.skew
     ts = timestamp.to_s # base 10 seconds since epoch
     nonce_key = key_prefix + 'N' + server_url + '|' + ts + '|' + salt
