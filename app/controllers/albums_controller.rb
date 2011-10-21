@@ -3,9 +3,7 @@ class AlbumsController < ApplicationController
   def index
     conditions = {}
     if q = params[:q]
-      # conditions = {:artist => /#{q}/i, :name => /#{q}/i}
-      # see http://www.mongodb.org/display/DOCS/OR+operations+in+query+expressions
-      conditions = { "$where" => "this.name.match(/#{q}/i) || this.artist.match(/#{q}/i)" }
+     conditions = { '$or' => [ {"name" => /#{q}/i}, {'artist' => /#{q}/i} ] }
     end
     if params[:randomly]
       @albums = Album.find_randomly
